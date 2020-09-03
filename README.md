@@ -5,8 +5,6 @@
   <h3 align="center">Mail Cheker</h3>
 
   <p align="center">
-    
-    <br />
   </p>
 </p>
 
@@ -17,10 +15,10 @@
 
 ## Progress
 * 2020.09.03: 
-    1. Data purity
-    2. Data getter
-    3. Pytest embedded
-    4. Jupyterbook for show
+    1. Data preprocessing -- utils/preprocessing/
+    2. Data getter -- dataset/
+    3. Pytest embedded -- test/
+    4. Jupyterbook for show -- display/data_evaluate.ipynb
 
 
 <!-- GETTING STARTED
