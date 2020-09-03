@@ -1,0 +1,12 @@
+# jupyter cache
+.virtual_documents
+**/.ipynb_checkpoints
+
+# pytest
+.pytest_cache
+
+# pycache
+**/__pycache__
+
+private
+
