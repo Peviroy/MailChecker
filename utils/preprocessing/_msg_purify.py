@@ -2,10 +2,11 @@
 @Author: peviroy
 @Date: 2020-09-02
 @Last Modified by: peviroy
-@Last Modified time: 2020-09-03 10:02
+@Last Modified time: 2020-09-06 21:06
 """
 
 import re
+from nltk.corpus import stopwords
 
 
 class TextPurifier:
@@ -16,7 +17,7 @@ class TextPurifier:
     '''
     # Tested
 
-    def __init__(self, texts=None, regex_rules=None):
+    def __init__(self, texts=None, regex_rules=None, noStopwords=True):
         '''
         Key Arguments:
             texts       {list of str} -- Text to be purified
@@ -24,6 +25,7 @@ class TextPurifier:
                                -- if name start with '_', then text will be replaced by <name>
                                -- if name start with '__',text will be replaced by <' '>
                                -- if name start with '___', text will be replaced by <''>
+            noStopwords {Boolean} -- Whether to keep stopwords or not
         '''
         self.regex_rules = {
             '__punctuation': r'[^\w\d\s]|_',
@@ -34,6 +36,7 @@ class TextPurifier:
             '__two_many_spaces': r'\s{2,}'
         }
         self.texts = texts
+        self.noStopwords = noStopwords
 
         self.update_regex(regex_rules)
 
@@ -79,7 +82,7 @@ class TextPurifier:
             pattern = re.compile(rule)
             for index, text in enumerate(self.texts):
                 searched = pattern.search(text)
-                if searched is not None:
+                if searched is not None and searched.group() != '$':  # '$' is preserved
                     matched.append(searched.group())
             yield (rule_name, matched[:10])
 
@@ -106,4 +109,11 @@ class TextPurifier:
 
             for index, text in enumerate(self.texts):
                 self.texts[index] = pattern.sub(repl, text.lower())
+
+        if self.noStopwords:
+            for index, text in enumerate(self.texts):
+                stop_off_words = [
+                    word for word in text.split() if word not in stopwords.words('english')]
+                self.texts[index] = ' '.join(stop_off_words)
+
         return self.texts
