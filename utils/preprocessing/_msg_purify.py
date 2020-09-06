@@ -26,11 +26,11 @@ class TextPurifier:
                                -- if name start with '___', text will be replaced by <''>
         '''
         self.regex_rules = {
+            '__punctuation': r'[^\w\d\s]|_',
             '_mailaddress': r'(?:[0-9a-zA-Z_])+\S@[^.]+\.[a-z]{2,}',
             '_webaddress': r'(http[s]?\://)?[a-zA-Z0-9\-\.]+\.(com|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk)(/\S*)*',
             '_phonenumber': r'\(?[\d]{4}\)?[\s-]?[\d]{3}[\s-]?[\d]{4,}',
             '_number': r'\b\d+(\.\d+)?\b',
-            '__punctuation': r'[^\w\d\s]|_',
             '__two_many_spaces': r'\s{2,}'
         }
         self.texts = texts
@@ -56,9 +56,6 @@ class TextPurifier:
         [Setter]
         Arguments:
             regex_rules {dict} -- In the form of "<name> : <rule>"
-                               -- if name start with '_', then text will be replaced by <name>
-                               -- if name start with '__',text will be replaced by <' '>
-                               -- if name start with '___', text will be replaced by <''>
         '''
         if regex_rules is None:
             return
@@ -89,6 +86,11 @@ class TextPurifier:
     # Tested
     def purify(self):
         '''
+        Note:
+            Applid on regex_rules {dict} -- In the form of "<name> : <rule>"  -index matters
+                        -- if name start with '_', then text will be replaced by <name>
+                        -- if name start with '__',text will be replaced by <' '>
+                        -- if name start with '___', text will be replaced by <''>
         Return:
             purified texts according to regular rules
         '''
@@ -100,41 +102,8 @@ class TextPurifier:
             elif rule_name.startswith('__'):
                 repl = ' '
             elif rule_name.startswith('_'):
-                repl = rule_name[1:]
+                repl = '$' + rule_name[1:]
 
             for index, text in enumerate(self.texts):
                 self.texts[index] = pattern.sub(repl, text.lower())
         return self.texts
-
-
-if __name__ == "__main__":
-    import os
-    os.chdir(os.path.split(os.path.realpath(__file__))[0])
-    import sys
-    sys.path.append(os.path.abspath("../../"))
-
-    from dataset import get_sms_dataset
-    data_df = get_sms_dataset()
-    testPuridier = TextPurifier(texts=data_df['message'].to_list())
-
-    exit()
-    print('|-----------------Import Test------------------|')
-    print(data_df.head())
-
-    print('|-----------------__str__ Test-----------------|')
-    print(testPuridier)
-
-    print('|-------------------iter Test--------------------|')
-    for rule_name, matched_strings in testPuridier.show_iter():
-        print(f'Rule name: {rule_name:10s} \n {matched_strings}')
-
-    print('|-----------------purify Test------------------|')
-    texts = testPuridier.purify()
-    print('As show in dataframe:')
-    data_df['message'] = texts
-    print(data_df.head())
-
-    print('Iter inspect Again:')
-    testPuridier.set_texts(texts)
-    for rule_name, matched_strings in testPuridier.show_iter():
-        print(f'Rule name: {rule_name:10s} \n {matched_strings}')
