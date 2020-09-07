@@ -2,7 +2,7 @@
 @Author: peviroy
 @Date: 2020-09-03 20:11
 @Last Modified by: peviroy
-@Last Modified time: 2020-09-03 20:46
+@Last Modified time: 2020-09-06 21:06
 """
 
 import os
@@ -31,4 +31,5 @@ class TestSMSInstance:
         assert data_df is not None
         # confirm purified
         for rule_name, matched in TextPurifier(texts=data_df['message']).show_iter():
+            print(matched)
             assert matched == []
