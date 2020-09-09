@@ -7,7 +7,6 @@
 import numpy as np
 import torch
 import torch.nn.utils.rnn as rnn_utils
-from torch.utils.data import DataLoader
 
 from dataset import get_sms_dataset
 
@@ -25,9 +24,10 @@ class SMSTransform():
         super(SMSTransform, self).__init__()
 
     def __call__(self, texts, targets):
-        out_texts = self.pad_sequence(self.vectorize(texts))
+        out_texts, word_dict = self.vectorize(texts)
+        out_texts = self.pad_sequence(out_texts)
         out_targets = self.to_tensor(targets)
-        return out_texts, out_targets
+        return out_texts, out_targets, word_dict
 
     @staticmethod
     def vectorize(texts):
@@ -41,7 +41,7 @@ class SMSTransform():
             vec_texts.append(torch.LongTensor(np.asarray(
                 [word_dict[n] for n in text.split()])))
 
-        return vec_texts
+        return vec_texts, word_dict
 
     @staticmethod
     def pad_sequence(vec_texts):
@@ -58,25 +58,10 @@ class SMSDataset(torch.utils.data.Dataset):
     def __init__(self, transform=SMSTransform(), file_path='data/spam.csv'):
         data_df = get_sms_dataset(SMS_DATASET=file_path)
         texts, targets = data_df.message.to_list(), data_df.target.to_list()
-        self.texts, self.targets = transform(texts, targets)
+        self.texts, self.targets, self.word_dict = transform(texts, targets)
 
     def __getitem__(self, idx):
         return {'text': self.texts[idx], 'target': self.targets[idx]}
 
     def __len__(self):
         return len(self.texts)
-
-
-if __name__ == '__main__':
-    import utils.random as urandom
-    urandom.set_seed()
-
-    smsTransform = SMSTransform()
-    sms_data = SMSDataset(smsTransform)
-    print(sms_data.targets[:6])
-    data_loader = DataLoader(sms_data, batch_size=3, shuffle=True,
-                             num_workers=2, worker_init_fn=urandom.worker_init_fn)
-
-    for batch_cnt, batch_i in enumerate(data_loader):
-        print(batch_i['target'])
-        exit()
