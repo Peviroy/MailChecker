@@ -2,13 +2,14 @@
 
 # Library to Compute Confusion Matrix
 from sklearn.metrics import confusion_matrix
-from matplotlib.pyplot.cm import Blues
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def plot_confusion_matrix(y_true, y_pred, classes,
                           normalize=False,
                           title=None,
-                          cmap=Blues):
+                          cmap=plt.cm.Blues):
     """
     This function prints and plots the confusion matrix.
     Normalization can be applied by setting `normalize=True`.
@@ -21,6 +22,9 @@ def plot_confusion_matrix(y_true, y_pred, classes,
 
     # Compute confusion matrix
     cm = confusion_matrix(y_true, y_pred)
+    cm[[0, 1], :] = cm[[1, 0], :]
+    cm[:, [0, 1]] = cm[:, [1, 0]]
+
     # Only use the labels that appear in the data
     # classes = classes[unique_labels(y_true, y_pred)]
     if normalize:
@@ -38,10 +42,8 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     ax.set(xticks=np.arange(cm.shape[1]),
            yticks=np.arange(cm.shape[0]),
            # ... and label them with the respective list entries
-           xticklabels=classes, yticklabels=classes,
-           title=title,
-           ylabel='True label',
-           xlabel='Predicted label')
+           xticklabels=['Pos', 'Neg'], yticklabels=['True', 'False'],
+           title=title)
 
     # Rotate the tick labels and set their alignment.
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
@@ -56,4 +58,9 @@ def plot_confusion_matrix(y_true, y_pred, classes,
                     ha="center", va="center",
                     color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
+    plt.show()
     return ax
+
+
+if __name__ == "__main__":
+    plot_confusion_matrix([1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 0, 0], ['1', '0'])
