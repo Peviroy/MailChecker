@@ -23,18 +23,18 @@
         <h2>MailChcker</h2>
         <form>
           <div class="input-field">
-            <textarea required="required" name="query" autofocus></textarea>
+            <textarea required="required" name="query" autofocus v-model="mailContent"></textarea>
             <label for="">Type in mail text for identify</label>
             <span></span>
           </div>
-          <input type="submit" value="Show Result" class="btn" @click="getPredicted" />
+          <input type="submit" value="Show Result" class="btn" @click="testPost" />
         </form>
       </div>
 
       <div id="output">
         <h3>Predict</h3>
         <div>
-          <textarea id="content" readonly v-text="serverResponse"></textarea>
+          <textarea id="content" readonly v-model="serverResponse"></textarea>
         </div>
       </div>
     </div>
@@ -48,7 +48,8 @@ export default {
   name: 'Checker',
   data: function() {
     return {
-      serverResponse: 'Click to get prediction'
+      serverResponse: 'Click to get prediction',
+      mailContent: ''
     };
   },
   methods: {
@@ -78,6 +79,20 @@ export default {
           this.serverResponse = msg;
         })
         .catch(function(error) {
+          console.log(error);
+        });
+    },
+    testPost() {
+      const path = 'http://127.0.0.1:5000/postMsg';
+      axios
+        .post(path, {
+          content: this.mailContent
+        })
+        .then((response) => {
+          this.serverResponse = response.data.msg;
+          console.log('1', response.data.msg);
+        })
+        .catch((error) => {
           console.log(error);
         });
     }
