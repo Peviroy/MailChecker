@@ -4,6 +4,7 @@
 @Last Modified by: peviroy
 @Last Modified time: 2020-09-08 23:56
 """
+import os
 import numpy as np
 import torch
 import torch.nn.utils.rnn as rnn_utils
@@ -20,21 +21,33 @@ class SMSTransform():
         In the type of torch.Tensor
     '''
 
-    def __init__(self):
+    def __init__(self, word_dict_dir='./checkpoints'):
         super(SMSTransform, self).__init__()
+        WORD_DICT_NAME = 'word_dict.npy'
+        self.word_dict_path = os.path.join(word_dict_dir, WORD_DICT_NAME)
+        if word_dict_dir != '':
+            try:
+                self.word_dict = np.load(
+                    self.word_dict_path, allow_pickle=True).item()
+            except FileNotFoundError:
+                self.word_dict = None
 
-    def __call__(self, texts, targets):
+    def __call__(self, texts, targets=None):
         out_texts, word_dict = self.vectorize(texts)
         out_texts = self.pad_sequence(out_texts)
         out_targets = self.to_tensor(targets)
+        if self.word_dict is None:
+            np.save(self.word_dict_path, word_dict)
         return out_texts, out_targets, word_dict
 
-    @staticmethod
-    def vectorize(texts):
-        word_list = " ".join(texts).split()
-        word_list = list(set(word_list))
-        # i+1 to avoid encode zero
-        word_dict = {w: i + 1 for i, w in enumerate(word_list)}
+    def vectorize(self, texts):
+        if self.word_dict is not None:
+            word_dict = self.word_dict
+        else:
+            word_list = " ".join(texts).split()
+            word_list = list(set(word_list))
+            # i+1 to avoid encode zero
+            word_dict = {w: i + 1 for i, w in enumerate(word_list)}
 
         vec_texts = []
         for text in texts:
@@ -51,6 +64,8 @@ class SMSTransform():
 
     @staticmethod
     def to_tensor(ls: list):
+        if ls is None:
+            return None
         return torch.LongTensor([out for out in ls])
 
 
@@ -61,7 +76,7 @@ class SMSDataset(torch.utils.data.Dataset):
         self.texts, self.targets, self.word_dict = transform(texts, targets)
 
     def __getitem__(self, idx):
-        return {'text': self.texts[idx], 'target': self.targets[idx]}
+        return self.texts[idx], self.targets[idx]
 
     def __len__(self):
         return len(self.texts)
