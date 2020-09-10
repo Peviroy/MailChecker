@@ -63,9 +63,10 @@
 
 <script>
 // Utilities
-import imgUrl from "@/assets/favicon.png"
+import imgUrl from '@/assets/favicon.png';
 import { mapState } from 'vuex';
 
+console.log(imgUrl);
 export default {
   name: 'DashboardCoreDrawer',
 

@@ -4,27 +4,22 @@
 
     <dashboard-core-drawer />
 
-    <dashboard-core-settings />    
-
     <dashboard-core-view />
-
-   
   </v-app>
 </template>
 
 <script>
-  export default {
-    name: 'Index',
+export default {
+  name: 'Index',
 
-    components: {
-      DashboardCoreAppBar: () => import('./components/core/AppBar'),
-      DashboardCoreDrawer: () => import('./components/core/Drawer'),
-      DashboardCoreSettings: () => import('./components/core/Settings'),
-      DashboardCoreView: () => import('./components/core/View'),
-    },
+  components: {
+    DashboardCoreAppBar: () => import('./components/core/AppBar'),
+    DashboardCoreDrawer: () => import('./components/core/Drawer'),
+    DashboardCoreView: () => import('./components/core/View')
+  },
 
-    data: () => ({
-      expandOnHover: false,
-    }),
-  }
+  data: () => ({
+    expandOnHover: false
+  })
+};
 </script>

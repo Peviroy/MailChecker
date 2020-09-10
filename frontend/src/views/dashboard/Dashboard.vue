@@ -1,14 +1,6 @@
 <template>
   <v-container id="dashboard" fluid tag="section">
-    <row id="checker">
-      <v-col cols="12" lg="4" id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" @click="closeNav">&times;</a>
-        <a href="#">MailChecker</a>
-        <a href="#" class="sid">Possible views</a>
-        <a href="#" class="sid">Possible views</a>
-        <a href="#" class="sid">Possible views</a>
-      </v-col>
-
+    <v-row id="checker">
       <div id="main">
         <div id="title">
           <h1>MailChecker</h1>
@@ -38,16 +30,13 @@
         </div>
 
         <div id="output">
-          <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            Predict
-          </p>
           <h3>Predict</h3>
           <div>
-            <textarea id="content" readonly v-text="serverResponse"></textarea>
+            <textarea id="content" readonly v-model="serverResponse"></textarea>
           </div>
         </div>
       </div>
-    </row>
+    </v-row>
 
     <v-row>
       <v-col cols="12" lg="4">
@@ -213,7 +202,8 @@ export default {
 
   data() {
     return {
-      serverResponse: 'Click to get prediction',
+      serverResponse: 'Click to get prediction2',
+      picked: '',
 
       dailySalesChart: {
         data: {
@@ -296,7 +286,8 @@ export default {
       var textArea = document.getElementById('content');
       textArea.scrollTop = textArea.scrollHeight;
     },
-    getPredicted() {
+    getPredicted(event) {
+      event.preventDefault();
       // 对应 Python 提供的接口，这里的地址填写下面服务器运行的地址，本地则为127.0.0.1，外网则为 your_ip_address
       const path = 'http://127.0.0.1:5000/getMsg';
       axios
@@ -306,13 +297,11 @@ export default {
           // 可以直接通过 response.data 取key-value
           var msg = response.data.msg;
           this.serverResponse = msg;
+          console.log(msg);
         })
         .catch(function(error) {
           console.log(error);
         });
-    },
-    complete(index) {
-      this.list[index] = !this.list[index];
     }
   }
 };
