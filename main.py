@@ -1,9 +1,17 @@
+"""
+@Author: peviroy
+@Date: 2020-09-08
+@Last Modified by: peviroy
+@Last Modified time: 2020-09-10 23:40
+"""
+
 # make sure to change to the projict directory
 import warnings
 from utils import adjust_learning_rate
-from dataset import SMSDataset, SMSTransform
+from dataset import SMSDataset, SMSTransform, SMSDataset_generator
 from utils import draw_acc_loss
 from model.BiLSTM_Wrapper import BiLSTM_Wrapper
+from model.LSTM_Wrapper import LSTM_Wrapper
 from torch.utils.data import DataLoader, random_split
 import torch.optim as optim
 import torch.nn as nn
@@ -16,23 +24,21 @@ os.chdir(os.path.split(os.path.realpath(__file__))[0])
 parser = argparse.ArgumentParser(description="Main entry for BiLSTM")
 parser.add_argument('--model-folder', default='./checkpoints',
                     help='folder to save models', dest='model_folder')
-parser.add_argument('--resume', default='./checkpoints/model_final', type=str,
+parser.add_argument('--resume', default='', type=str,
                     help='path to latest checkpoint')
-parser.add_argument('--class-num', default=10, type=int,
-                    help='number of classes classified', dest='class_num')
 parser.add_argument('--pre-epoch', default=0, type=int,
                     help='previous epoch (default: none)', dest='pre_epoch')
 parser.add_argument('--data', default='./data/spam.csv',
                     help='where the data set is stored')
 parser.add_argument('--batch', default=256, type=int,
                     help='batch size of data input(default: 64)')
-parser.add_argument('--epoch', default=5000, type=int,
+parser.add_argument('--epoch', default=2000, type=int,
                     help='the number of cycles to train the model(default: 200)')
-parser.add_argument('--save', default='./checkpoints',
+parser.add_argument('--save', default='./checkpoints/model_ham/',
                     help='dir for saving document file')
 parser.add_argument('--lr', default='0.001', type=float,
                     help='learning rate(default: 0.001)')
-parser.add_argument('--lr-decay-step', default='400', type=int,
+parser.add_argument('--lr-decay-step', default='250', type=int,
                     help='lr decayed by 10 every step', dest='lr_decay_step')
 parser.add_argument('--weight-decay', default=5e-4, type=float,
                     help='weight decay (default: 5e-4)', dest='weight_decay')
@@ -40,12 +46,13 @@ parser.add_argument('--gpu', default=0, type=int, help='GPU id to use')
 parser.add_argument('--validate', default=False,
                     type=bool, help='validation mode')
 parser.add_argument('--test', default=False, type=bool, help='test only mode')
-parser.add_argument('--predict', default=True,
+parser.add_argument('--predict', default=False,
                     type=bool, help='predict only mode')
-parser.add_argument('--model', default='resnet18', type=str,
-                    help='resnet18、resnet34、resnet50，etc')
-
-parser.add_argument('-seed', default=41724, type=int,
+parser.add_argument('--model', default='attention', type=str,
+                    help='generator')
+parser.add_argument('--sequence-length', default=5, type=int,
+                    help='sequence_length for generator model')
+parser.add_argument('-seed', default=417241, type=int,
                     help='seed used for the random permutation.')
 args = parser.parse_args()
 
@@ -68,7 +75,7 @@ def main():
         os.makedirs(args.save)
 
     # Only support single gpu training right now
-    if not torch.cuda.is_available():
+    if not torch.cuda.is_available() or args.gpu == -1:
         warnings.warn('No GPU is not found. Use CPU')
         device = torch.device('cpu')
     else:
@@ -90,6 +97,60 @@ def main_worker(device, args):
 
     # *Data loading
     transform = SMSTransform(args.save)
+
+    if args.model == 'generator':
+        sms_dataset = SMSDataset_generator(
+            args.sequence_length, cate_type='ham', transform=transform, file_path=args.data)
+        train_dataloader = DataLoader(sms_dataset,
+                                      batch_size=BATCH_SIZE)
+
+        model_wrapper = LSTM_Wrapper(
+            device=device, word_dict=sms_dataset.word_dict, index_dict=sms_dataset.index_dict, pre_file_path=args.save)
+        model_wrapper.fit()
+
+        # resume frome a checkpoint
+        if args.resume:
+            if os.path.isfile(args.resume):
+                print('loading pretrained model: {0:s}'.format(args.resume))
+                model_wrapper.load_model(full_path=args.resume, device=device)
+            else:
+                warnings.warn('No such checkpoint: {0:s}'.format(args.resume))
+
+        criterion = nn.CrossEntropyLoss().to(device)
+        optimizer = optim.Adam(model_wrapper.model.parameters(), lr=LR,
+                               weight_decay=WEIGHT_DECAY)
+
+        if args.predict:
+            print(model_wrapper.predict(
+                ['Even my brother is not like to'], 50))
+            return
+
+        loss_list = []
+        for epoch in range(PRE_EPOCH, EPOCH):
+            print('In Train:')
+            state_h, state_c = model_wrapper.model.init_state(
+                args.sequence_length)
+
+            train_loss, train_logger = model_wrapper.train(
+                train_dataloader, criterion, optimizer, state_h, state_c, current_epoch=epoch)
+            loss_list.append(train_loss)
+            # remember best acc@1 and save checkpoint
+            if ((epoch + 1) % 100 == 0):
+                print('Saving model in epoch: {0:d}'.format(epoch + 1))
+                model_wrapper.save_model(
+                    full_path='{0:s}/model_s_{1:03d}_{2:.3f}'.format(args.save, epoch + 1, train_loss))
+
+        print(model_wrapper.predict(['Even my brother is not like to'], 50))
+
+        draw_acc_loss(PRE_EPOCH, EPOCH, train_acc=None,
+                      train_loss=loss_list, test_acc=None, savedir=args.save)
+
+        print('Saving Final model in epoch')
+        model_wrapper.save_model(
+            full_path='{0:s}/model_s_final'.format(args.save))
+        print("Training Finish")
+        return
+
     sms_dataset = SMSDataset(transform=transform,
                              file_path=args.data)
 
@@ -114,7 +175,7 @@ def main_worker(device, args):
 
     # *create model
     model_wrapper = BiLSTM_Wrapper(
-        device=device, word_dict=sms_dataset.word_dict)
+        device=device, word_dict=sms_dataset.word_dict, pre_file_path=args.save)
     model_wrapper.fit()
 
     # resume frome a checkpoint
@@ -135,7 +196,6 @@ def main_worker(device, args):
             'Even my brother is not like to speak with me. They treat me like aids patent.',
             'SIX chances to win CASH! From 100 to 20,000 pounds txt> CSH11 and send to 87575. Cost 150p/day, 6days, 16+ TsandCs apply Reply HL 4 info'])
 
-    exit()
     # *Start traning or testing
     # test mode: get the accuracy of the model on test dataset
     if args.test:
@@ -154,8 +214,8 @@ def main_worker(device, args):
             test_accuracy_list = []
             for epoch in range(PRE_EPOCH, EPOCH):
                 print('In Train:')
-                # adjust_learning_rate(
-                # optimizer, epoch, original_lr=args.lr, decay_step=args.lr_decay_step)
+                adjust_learning_rate(
+                    optimizer, epoch, original_lr=args.lr, decay_step=args.lr_decay_step)
                 # the task of outputing grogress has been completed within the train and test function
                 train_loss, train_acc1, train_logger = model_wrapper.train(
                     train_dataloader, criterion, optimizer)
@@ -167,7 +227,7 @@ def main_worker(device, args):
                     best_acc1 = max(acc1, best_acc1)
                     print('Saving model in epoch: {0:d}'.format(epoch + 1))
                     model_wrapper.save_model(
-                        full_path='{0:s}/model_{1:03d}_{2:.3f}'.format(args.model_folder, epoch + 1, acc1))
+                        full_path='{0:s}/model_{1:03d}_{2:.3f}'.format(args.save, epoch + 1, acc1))
 
                 loss_list.append(train_loss)
                 train_accuracy_list.append(train_acc1)
@@ -187,7 +247,7 @@ def main_worker(device, args):
 
     print('Saving Final model in epoch')
     model_wrapper.save_model(
-        full_path='{0:s}/model_final'.format(args.model_folder))
+        full_path='{0:s}/model_final'.format(args.save))
     print("Training Finish")
 
 

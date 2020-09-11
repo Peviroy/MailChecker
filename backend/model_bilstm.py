@@ -1,21 +1,48 @@
+import os
+os.chdir(os.path.split(os.path.realpath(__file__))[0])
+import sys
+sys.path.append(os.path.abspath(".."))
 from model.BiLSTM_Wrapper import BiLSTM_Wrapper
 import numpy as np
+import torch
 import os
 
 
-def load_module():
-    model_wrapper = BiLSTM_Wrapper(word_dict=_load_word_dict())
-    model_wrapper.fit()
-    return model_wrapper
-
-
-def _load_word_dict():
-    WORD_DICT_DIR = './checkpoints'
-    WORD_DICT_NAME = 'word_dict.npy'
-    word_dict_path = os.path.join(WORD_DICT_DIR, WORD_DICT_NAME)
-    try:
-        word_dict = np.load(
+class BILSTM_Controller:
+    def __init__(self):
+        device = torch.device('cpu')
+        word_dict_path, embed_layer_path, model_path = self._load_checkpoints()
+        self.word_dict = np.load(
             word_dict_path, allow_pickle=True).item()
-    except FileNotFoundError:
-        raise FileExistsError('word dict must be specified')
-    return word_dict
+        self.model_wrapper = BiLSTM_Wrapper(device=device,
+                                            word_dict=self.word_dict, pre_file_path=embed_layer_path)
+        self.model_wrapper.fit()
+        self.model_wrapper.load_model(device=device, full_path=model_path)
+
+    def predict(self, text):
+        predict, imgpath = self.model_wrapper.predict([text])
+        print(predict)
+        print(imgpath)
+        return predict, imgpath
+
+    def _load_checkpoints(self, dir_path='../checkpoints/bilstm'):
+        WORD_DICT_NAME = 'word_dict.npy'
+        EMBEDDING_NAME = 'glove100.npy'
+        MODEL_NAME = 'model_final'
+
+        word_dict_path = os.path.join(
+            dir_path, WORD_DICT_NAME
+        )
+        embed_layer_path = os.path.join(
+            dir_path, EMBEDDING_NAME
+        )
+        model_path = os.path.join(
+            dir_path, MODEL_NAME
+        )
+        return word_dict_path, embed_layer_path, model_path
+
+
+if __name__ == "__main__":
+    bc = BILSTM_Controller()
+    bc.predict(
+        'Even my brother is not like to speak with me. They treat me like aids patent')

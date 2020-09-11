@@ -2,7 +2,7 @@
 @Author: peviroy
 @Date: 2020-09-02
 @Last Modified by: peviroy
-@Last Modified time: 2020-09-06 21:07
+@Last Modified time: 2020-09-10 23:07
 """
 
 import pandas as pd
@@ -12,11 +12,12 @@ from utils.preprocessing import TextPurifier
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
-def get_sms_dataset(raw=False, SMS_DATASET='data/spam.csv', noStopwords=False, overwrite=False):
+def get_sms_dataset(raw=False, SMS_DATASET='data/spam.csv', type='all', noStopwords=False, overwrite=False):
     '''
     Prepare dataset. do something trivial but necessary.
     Argument:
         raw {boolean} -- processing dataset or return directly
+                      -- raw for reserved only! dont use it to train
         noStopwords {Boolean} -- whether to purify stopwords or not
         overwrite {Boolean} -- get from a new data file or from a existing file
     '''
@@ -28,14 +29,22 @@ def get_sms_dataset(raw=False, SMS_DATASET='data/spam.csv', noStopwords=False, o
         return pd.read_csv(SMS_DATASET_PATH, encoding="latin-1")
     else:
         SMS_PURIFIED_DATASET_PATH = SMS_DATASET_PATH.replace(
-            'spam.csv', 'spam_purified.csv')
+            'spam.csv', 'spam_purified_withstop.csv')
         if os.path.exists(SMS_PURIFIED_DATASET_PATH) and not overwrite:
-            return pd.read_csv(SMS_PURIFIED_DATASET_PATH, encoding="latin-1")
+            data_df = pd.read_csv(
+                SMS_PURIFIED_DATASET_PATH, encoding="latin-1")
         else:
-            return _purify_sms_dataset(get_sms_dataset(raw=True, SMS_DATASET=SMS_DATASET, noStopwords=noStopwords, overwrite=overwrite), noStopwords=noStopwords)
+            data_df = _purify_sms_dataset(get_sms_dataset(raw=True, SMS_DATASET=SMS_DATASET, noStopwords=noStopwords,
+                                                          overwrite=overwrite), noStopwords=noStopwords, if_save_path=SMS_PURIFIED_DATASET_PATH)
+        if type == 'ham':
+            data_df = data_df[data_df['target'] == 0]
+        elif type == 'spam':
+            data_df = data_df[data_df['target'] == 1]
+        data_df['length'] = data_df['message'].map(len)
+        return data_df
 
 
-def _purify_sms_dataset(data_df, noStopwords):
+def _purify_sms_dataset(data_df, noStopwords, if_save_path):
     '''
     Purify sms_dataset. Helper of get_sms_dataset
     Argument:
@@ -55,6 +64,5 @@ def _purify_sms_dataset(data_df, noStopwords):
     data_df['message'] = TextPurifier(
         texts=data_df['message'].to_list(), noStopwords=noStopwords).purify()
 
-    data_df.to_csv(os.path.join(
-        BASE_DIR, 'data/spam_purified.csv'), index=False, encoding="latin-1")
+    data_df.to_csv(if_save_path, index=False, encoding="latin-1")
     return data_df

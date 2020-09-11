@@ -21,29 +21,38 @@ class BiLSTM_Wrapper:
     A union for a series of operations of BiLSTM. e.g. data transform, train, predict...
     '''
 
-    def __init__(self, device, word_dict):
+    def __init__(self, device, word_dict, pre_file_path=None):
         '''
         Empty wrapper created, use 'fit and train' to start train a new model or use 'load' to get a pretrained model
         '''
         super(BiLSTM_Wrapper, self).__init__()
         self.device = device
         self.word_dict = word_dict
+        self.pre_file_path = pre_file_path
 
     def fit(self, **args):
         self._vocab_size = len(self.word_dict)
         n_hidden = args.get('n_hidden') or 5
         num_classes = args.get('num_classes') or 2
-        embeddings_matrix = self._get_glove_embedding()
+        embeddings_matrix = self._get_glove_embedding(
+            checkpoint_path=self.pre_file_path)
         self.model = BiLSTM_Attention(self._vocab_size, n_hidden,
                                       num_classes, embedding_dim=100, embedding_matrix=embeddings_matrix, device=self.device)
         self.model = self.model.to(self.device)
 
     def _get_glove_embedding(self, **args):
         FILE_PATH = args.get('file_path') or 'data/glove.6B.100d.txt'
-        CHECKPOINT_PATH = args.get(
-            'checkpoint_path') or 'checkpoints/glove100.npy'
+        if args.get('checkpoint_path') is not None:
+            if os.path.isfile(args.get('checkpoint_path')):
+                CHECKPOINT_PATH = str(args.get(
+                    'checkpoint_path'))
+            else:
+                CHECKPOINT_PATH = str(args.get(
+                    'checkpoint_path')) + 'glove100.npy'
+        else:
+            CHECKPOINT_PATH = 'checkpoints/glove100.npy'
 
-        if not os.path.exists(FILE_PATH):
+        if not os.path.exists(FILE_PATH) and not os.path.isfile(CHECKPOINT_PATH):
             raise FileExistsError('Glove file not founded')
         if os.path.exists(CHECKPOINT_PATH):
             embeddings_matrix = np.load(CHECKPOINT_PATH)
@@ -146,8 +155,8 @@ class BiLSTM_Wrapper:
         texts = TextPurifier(texts).purify()
         print(texts)
 
-        transform = SMSTransform()
-        new_texts, _, _ = transform(texts)
+        transform = SMSTransform(self.word_dict, is_dict_file=True)
+        new_texts, _, _, _ = transform(texts)
         # new_texts = []
         # for text in texts:
         #     new_texts.append(torch.LongTensor(np.asarray(

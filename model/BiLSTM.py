@@ -8,8 +8,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-MODEL_FOLDER = '../checkpoints'
-
 
 class BiLSTM_Attention(nn.Module):
     def __init__(self, vocab_size, n_hidden, num_classes, embedding_dim, device=None, embedding_matrix=None):

@@ -87,7 +87,7 @@ class TextPurifier:
             yield (rule_name, matched[:10])
 
     # Tested
-    def purify(self):
+    def purify(self) -> list:
         '''
         Note:
             Applid on regex_rules {dict} -- In the form of "<name> : <rule>"  -index matters

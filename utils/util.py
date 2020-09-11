@@ -12,7 +12,7 @@ def draw_acc_loss(START_EPOCH: int, END_EPOCH: int, train_acc: list, train_loss:
 
     Output:
     -------
-        Two pictures; 
+        Two pictures
             One of them shows the accuracy of train and test; the other shows the loss of train
 
     Problems:
@@ -24,15 +24,17 @@ def draw_acc_loss(START_EPOCH: int, END_EPOCH: int, train_acc: list, train_loss:
     Y_loss = train_loss
 
     plt.figure()
-    plt.plot(X_axis, Y_acc[0], '-', c='blue')
-    plt.plot(X_axis, Y_acc[1], '-', c='green')
-    plt.title('Accuracy vs. epoches')
-    plt.ylabel('Accuracy')
-    plt.legend(['Train', 'Test'])
-    plt.savefig(savedir + "accuracy.jpg")
+    if train_acc is not None and test_acc is not None:
+        plt.plot(X_axis, Y_acc[0], '-', c='blue')
+        plt.plot(X_axis, Y_acc[1], '-', c='green')
+        plt.title('Accuracy vs. epoches')
+        plt.ylabel('Accuracy')
+        plt.legend(['Train', 'Test'])
+        plt.savefig(savedir + "/accuracy.jpg")
 
     plt.figure()
-    plt.plot(X_axis, Y_loss, '.-')
-    plt.title('Train loss vs. epoches')
-    plt.ylabel('Loss')
-    plt.savefig(savedir + "loss.jpg")
+    if Y_loss is not None:
+        plt.plot(X_axis, Y_loss, '.-')
+        plt.title('Train loss vs. epoches')
+        plt.ylabel('Loss')
+        plt.savefig(savedir + "/loss.jpg")
