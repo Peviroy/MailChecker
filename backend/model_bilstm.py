@@ -17,12 +17,12 @@ class BILSTM_Controller:
 
     def predict(self, text):
         predict, imgpath = self.model_wrapper.predict([text])
-        if predict[0] == 0:
+        print(predict, imgpath)
+        if predict == 0:
             predict = 'ham'
         else:
             predict = 'spam'
-        print(predict)
-        print(imgpath)
+
         return predict, imgpath
 
     def _load_checkpoints(self, dir_path='../checkpoints/bilstm'):

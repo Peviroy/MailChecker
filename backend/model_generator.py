@@ -25,7 +25,6 @@ class LSTMG_Controller:
         if words is None:
             return 'Some word not contained, change another mail or nextwords'
         text = ' '.join(words)
-        print(text)
         return text
 
     def _load_checkpoints(self, dir_path='../checkpoints/', model_type='model_ham'):

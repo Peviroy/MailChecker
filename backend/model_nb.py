@@ -13,8 +13,7 @@ class MultiNB_Controller:
         else:
             predict = 'spam'
         prob = prob[0][0]
-        print(predict)
-        print(prob)
+
         return predict, prob
 
 

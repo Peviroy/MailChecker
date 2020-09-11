@@ -153,7 +153,6 @@ class BiLSTM_Wrapper:
     def predict(self, texts):
         original_texts = texts
         texts = TextPurifier(texts).purify()
-        print(texts)
 
         transform = SMSTransform(self.word_dict, is_dict_file=True)
         new_texts, _, _, _ = transform(texts)
@@ -200,4 +199,4 @@ class BiLSTM_Wrapper:
         #    'batch_4', 'batch_5', 'batch_6'], fontdict={'fontsize': 14})
         plt.savefig(save_path)
 
-        plt.show()
+        # plt.show()

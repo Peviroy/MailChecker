@@ -12,10 +12,24 @@ app = Flask(__name__,
             )
 cors = CORS(app, resources={r'/getMsg': {"origin": "*"}})
 
+nbc = MultiNB_Controller()
 bc = BILSTM_Controller()
 lgc_h = LSTMG_Controller(model_type='model_ham')
 lgc_s = LSTMG_Controller(model_type='model_spam')
-nbc = MultiNB_Controller()
+
+
+def test():
+    print(1, nbc.predict(
+        'Even my brother is not like to speak with me. They treat me like aids patent'))
+    print(2, bc.predict(
+        'Even my brother is not like to speak with me. They treat me like aids patent'))
+    print(3, lgc_h.predict(
+        'Even my brother is not like to speak with me. They treat me like aids patent'))
+    print(4, lgc_s.predict(
+        'Even my brother is not like to speak with me. They treat me like aids patent'))
+
+
+test()
 
 
 @app.after_request
@@ -32,23 +46,14 @@ def index():
     return render_template("index.html")
 
 
-@app.route('/getMsg', methods=['GET'])
-def predict():
-    response = {
-        'msg': 'Oops, predict unsupport now'
-    }
-    print(response)
-    return jsonify(response)
-
-
 @app.route('/getPredict', methods=['POST'])
-def Test():
+def predict():
     data = json.loads(request.get_data(as_text=True))
     mailcontent = data['content']
     model_type = data['model']
     img_path = ''
     prob = ''
-    if model_type == 2:
+    if model_type == 'Two':
         prediction, img_path = bc.predict(mailcontent)
     else:
         prediction, prob = nbc.predict(mailcontent)
@@ -57,12 +62,13 @@ def Test():
         'imgPath': img_path,
         'prob': prob
     }
+    print(response)
     print(data)
     return jsonify(response)
 
 
 @app.route('/getContent', methods=['POST'])
-def Test():
+def generator():
     data = json.loads(request.get_data(as_text=True))
     mailcontent = data['content']
     mailtype = data['type']

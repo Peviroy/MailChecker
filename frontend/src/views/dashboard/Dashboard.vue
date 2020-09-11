@@ -11,7 +11,7 @@
 
           <form>
             <div class="input-field">
-              <textarea required="required" name="query" autofocus></textarea>
+              <textarea required="required" name="query" autofocus v-model="mailcontent"></textarea>
               <label for>Type in mail text for identify</label>
               <span></span>
             </div>
@@ -204,6 +204,7 @@ export default {
     return {
       serverResponse: 'Click to get prediction2',
       picked: '',
+      mailcontent: '',
 
       dailySalesChart: {
         data: {
@@ -289,15 +290,25 @@ export default {
     getPredicted(event) {
       event.preventDefault();
       // 对应 Python 提供的接口，这里的地址填写下面服务器运行的地址，本地则为127.0.0.1，外网则为 your_ip_address
-      const path = 'http://127.0.0.1:5000/getMsg';
+      const path = 'http://127.0.0.1:5000/getPredict';
       axios
-        .get(path)
+        .post(path, {
+          content: this.mailcontent,
+          model: this.picked
+        })
         .then((response) => {
           // 这里服务器返回的 response 为一个 json object，可通过如下方法需要转成 json 字符串
           // 可以直接通过 response.data 取key-value
-          var msg = response.data.msg;
-          this.serverResponse = msg;
-          console.log(msg);
+          var prediction = response.data.msg;
+          var prob = response.data.prob;
+
+          var display;
+          if (this.picked === 'Two') {
+            display = `${prediction.toUpperCase()}`;
+          } else {
+            display = `${prediction.toUpperCase()}     Score  ${prob.toFixed(4) * 100}`;
+          }
+          this.serverResponse = display;
         })
         .catch(function(error) {
           console.log(error);
