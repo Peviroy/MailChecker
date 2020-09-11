@@ -2,9 +2,9 @@
   <v-container id="dashboard" fluid tag="section">
     <v-row id="checker">
       <div id="main">
-        <div id="title">
+        <!-- <div id="title">
           <h1>MailChecker</h1>
-        </div>
+        </div> -->
 
         <div class="container1">
           <h2>MailChecker</h2>
@@ -16,7 +16,17 @@
               <span></span>
             </div>
 
-            <div id="choose">
+            <!-- <v-switch v-model="switch1" :label="`model 1: ${switch1.toString()}`"></v-switch> -->
+
+            <v-container id="dropdown-example-1">
+              <v-overflow-btn
+                class="my-2"
+                :items="dropdown_font"
+                label="Choose a model"
+                target="#dropdown-example-1"
+              ></v-overflow-btn>
+            </v-container>
+            <!-- <div id="choose">
               <input type="radio" id="one" value="One" v-model="picked" />
               <label for="one">模型1</label>
               <br />
@@ -24,7 +34,7 @@
               <label for="two">模型2</label>
               <br />
               <span>selected: {{ picked }}</span>
-            </div>
+            </div> -->
             <input type="submit" value="Show Result" class="btn" @click="getPredicted" />
           </form>
         </div>
@@ -37,160 +47,6 @@
         </div>
       </div>
     </v-row>
-
-    <v-row>
-      <v-col cols="12" lg="4">
-        <base-material-chart-card
-          :data="emailsSubscriptionChart.data"
-          :options="emailsSubscriptionChart.options"
-          :responsive-options="emailsSubscriptionChart.responsiveOptions"
-          color="#E91E63"
-          hover-reveal
-          type="Bar"
-        >
-          <template v-slot:reveal-actions>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" color="info" icon v-on="on">
-                  <v-icon color="info">
-                    mdi-refresh
-                  </v-icon>
-                </v-btn>
-              </template>
-
-              <span>Refresh</span>
-            </v-tooltip>
-
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" light icon v-on="on">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </template>
-
-              <span>Change Date</span>
-            </v-tooltip>
-          </template>
-
-          <h4 class="card-title font-weight-light mt-2 ml-2">
-            Website Views
-          </h4>
-
-          <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            Last Campaign Performance
-          </p>
-
-          <template v-slot:actions>
-            <v-icon class="mr-1" small>
-              mdi-clock-outline
-            </v-icon>
-            <span class="caption grey--text font-weight-light">updated 10 minutes ago</span>
-          </template>
-        </base-material-chart-card>
-      </v-col>
-
-      <v-col cols="12" lg="4">
-        <base-material-chart-card
-          :data="dailySalesChart.data"
-          :options="dailySalesChart.options"
-          color="success"
-          hover-reveal
-          type="Line"
-        >
-          <template v-slot:reveal-actions>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" color="info" icon v-on="on">
-                  <v-icon color="info">
-                    mdi-refresh
-                  </v-icon>
-                </v-btn>
-              </template>
-
-              <span>Refresh</span>
-            </v-tooltip>
-
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" light icon v-on="on">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </template>
-
-              <span>Change Date</span>
-            </v-tooltip>
-          </template>
-
-          <h4 class="card-title font-weight-light mt-2 ml-2">
-            Daily Sales
-          </h4>
-
-          <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            <v-icon color="green" small>
-              mdi-arrow-up
-            </v-icon>
-            <span class="green--text">55%</span>
-            &nbsp; increase in today's sales
-          </p>
-
-          <template v-slot:actions>
-            <v-icon class="mr-1" small>
-              mdi-clock-outline
-            </v-icon>
-            <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
-          </template>
-        </base-material-chart-card>
-      </v-col>
-
-      <v-col cols="12" lg="4">
-        <base-material-chart-card
-          :data="dataCompletedTasksChart.data"
-          :options="dataCompletedTasksChart.options"
-          hover-reveal
-          color="info"
-          type="Line"
-        >
-          <template v-slot:reveal-actions>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" color="info" icon v-on="on">
-                  <v-icon color="info">
-                    mdi-refresh
-                  </v-icon>
-                </v-btn>
-              </template>
-
-              <span>Refresh</span>
-            </v-tooltip>
-
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" light icon v-on="on">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </template>
-
-              <span>Change Date</span>
-            </v-tooltip>
-          </template>
-
-          <h3 class="card-title font-weight-light mt-2 ml-2">
-            Completed Tasks
-          </h3>
-
-          <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            Last Last Campaign Performance
-          </p>
-
-          <template v-slot:actions>
-            <v-icon class="mr-1" small>
-              mdi-clock-outline
-            </v-icon>
-            <span class="caption grey--text font-weight-light">campaign sent 26 minutes ago</span>
-          </template>
-        </base-material-chart-card>
-      </v-col>
-    </v-row>
   </v-container>
 </template>
 
@@ -199,12 +55,14 @@ import axios from 'axios';
 
 export default {
   name: 'DashboardDashboard',
+  
 
   data() {
     return {
       serverResponse: 'Click to get prediction2',
       picked: '',
-
+      switch1: '',
+      dropdown_font: ['Model1', 'Model2'],
       dailySalesChart: {
         data: {
           labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
@@ -361,7 +219,7 @@ export default {
   box-shadow: none;
   border: none;
   font-size: 16px;
-  color: #fff;
+  color: rgb(0, 0, 0);
   width: 100%;
   height: 210px;
   outline: none;
@@ -374,7 +232,7 @@ export default {
 .input-field textarea:valid + label {
   transform: translateY(-35px);
   font-size: 14px;
-  color: #fff;
+  color: rgb(0, 0, 0);
   background: #ff006a;
   padding: 5px 2px;
 }
@@ -415,14 +273,14 @@ export default {
   border-radius: 10px;
   box-shadow: none;
   padding: 10px 25px;
-  background: #333;
+  background: rgb(255, 181, 30);
   color: #fff;
   font-size: 16px;
   cursor: pointer;
 }
 
 .btn:hover {
-  background: rgb(255, 181, 30);
+  background: rgb(206, 191, 191);
 }
 
 #output {
@@ -442,8 +300,9 @@ export default {
   background-color: transparent;
   border: 0;
   width: 100%;
+  height: 80px;
 
-  color: rgb(206, 191, 191);
+  color: rgb(0, 0, 0);
   resize: none;
   outline: none;
   text-align: center;

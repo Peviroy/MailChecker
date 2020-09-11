@@ -32,7 +32,7 @@ parser.add_argument('--save', default='./checkpoints',
                     help='dir for saving document file')
 parser.add_argument('--lr', default='0.001', type=float,
                     help='learning rate(default: 0.001)')
-parser.add_argument('--lr-decay-step', default='400', type=int,
+parser.add_argument('--lr-decay-step', default='600', type=int,
                     help='lr decayed by 10 every step', dest='lr_decay_step')
 parser.add_argument('--weight-decay', default=5e-4, type=float,
                     help='weight decay (default: 5e-4)', dest='weight_decay')
@@ -40,7 +40,7 @@ parser.add_argument('--gpu', default=0, type=int, help='GPU id to use')
 parser.add_argument('--validate', default=False,
                     type=bool, help='validation mode')
 parser.add_argument('--test', default=False, type=bool, help='test only mode')
-parser.add_argument('--predict', default=True,
+parser.add_argument('--predict', default=False,
                     type=bool, help='predict only mode')
 parser.add_argument('--model', default='resnet18', type=str,
                     help='resnet18、resnet34、resnet50，etc')
@@ -135,7 +135,6 @@ def main_worker(device, args):
             'Even my brother is not like to speak with me. They treat me like aids patent.',
             'SIX chances to win CASH! From 100 to 20,000 pounds txt> CSH11 and send to 87575. Cost 150p/day, 6days, 16+ TsandCs apply Reply HL 4 info'])
 
-    exit()
     # *Start traning or testing
     # test mode: get the accuracy of the model on test dataset
     if args.test:
@@ -154,8 +153,8 @@ def main_worker(device, args):
             test_accuracy_list = []
             for epoch in range(PRE_EPOCH, EPOCH):
                 print('In Train:')
-                # adjust_learning_rate(
-                # optimizer, epoch, original_lr=args.lr, decay_step=args.lr_decay_step)
+                adjust_learning_rate(
+                    optimizer, epoch, original_lr=args.lr, decay_step=args.lr_decay_step)
                 # the task of outputing grogress has been completed within the train and test function
                 train_loss, train_acc1, train_logger = model_wrapper.train(
                     train_dataloader, criterion, optimizer)

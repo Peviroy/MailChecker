@@ -7,12 +7,15 @@
 
       <v-icon v-else>
         mdi-dots-vertical
-      </v-icon>
+      </v-icon>  
     </v-btn>
 
     <v-toolbar-title class="hidden-sm-and-down font-weight-light" v-text="$route.name" />
 
-    <v-spacer />
+    <v-spacer/>
+    <div id="title" align="center">
+      <h1 align="center">MailChecker</h1>
+    </div>
   </v-app-bar>
 </template>
 
