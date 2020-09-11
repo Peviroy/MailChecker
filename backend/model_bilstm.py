@@ -1,7 +1,3 @@
-import os
-os.chdir(os.path.split(os.path.realpath(__file__))[0])
-import sys
-sys.path.append(os.path.abspath(".."))
 from model.BiLSTM_Wrapper import BiLSTM_Wrapper
 import numpy as np
 import torch
@@ -21,6 +17,10 @@ class BILSTM_Controller:
 
     def predict(self, text):
         predict, imgpath = self.model_wrapper.predict([text])
+        if predict[0] == 0:
+            predict = 'ham'
+        else:
+            predict = 'spam'
         print(predict)
         print(imgpath)
         return predict, imgpath

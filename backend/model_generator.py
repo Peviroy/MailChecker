@@ -1,14 +1,10 @@
 import os
-os.chdir(os.path.split(os.path.realpath(__file__))[0])
-import sys
-sys.path.append(os.path.abspath(".."))
 from model.LSTM_Wrapper import LSTM_Wrapper
 import numpy as np
 import torch
-import os
 
 
-class BILSTM_Controller:
+class LSTMG_Controller:
     def __init__(self, model_type='model_spam'):
         device = torch.device('cpu')
         word_dict_path, embed_layer_path, model_path = self._load_checkpoints(
@@ -50,6 +46,6 @@ class BILSTM_Controller:
 
 
 if __name__ == "__main__":
-    bc = BILSTM_Controller()
-    bc.predict(
+    lgc = LSTMG_Controller()
+    lgc.predict(
         'Even my brother is not like to speak with me. They treat me like aids patent')
