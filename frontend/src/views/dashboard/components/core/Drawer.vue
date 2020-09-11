@@ -24,7 +24,7 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title class="display-1" v-text="profile.title" />
+          <v-list-item-title class="display-1" v-text="text" />
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -78,42 +78,43 @@ export default {
   },
 
   data: () => ({
+    text: 'MailChecker',
     items: [
       {
         icon: 'mdi-view-dashboard',
         title: 'dashboard',
         to: '/'
       },
-      {
-        icon: 'mdi-account',
-        title: 'user',
-        to: '/pages/user'
-      },
       // {
-      //   title: 'rtables',
-      //   icon: 'mdi-clipboard-outline',
-      //   to: '/tables/regular-tables',
+      //   icon: 'mdi-account',
+      //   title: 'user',
+      //   to: '/pages/user'
       // },
+      {
+        title: 'Data table',
+        icon: 'mdi-clipboard-outline',
+        to: '/tables/regular-tables'
+      },
       // {
       //   title: 'typography',
       //   icon: 'mdi-format-font',
       //   to: '/components/typography',
       // },
-      // {
-      //   title: 'icons',
-      //   icon: 'mdi-chart-bubble',
-      //   to: '/components/icons',
-      // },
-      // {
-      //   title: 'google',
-      //   icon: 'mdi-map-marker',
-      //   to: '/maps/google-maps',
-      // },
       {
-        title: 'notifications',
-        icon: 'mdi-bell',
-        to: '/components/notifications'
+        title: 'Generator lab',
+        icon: 'mdi-chart-bubble',
+        to: '/components/icons'
+      },
+      {
+        title: 'Word analysis',
+        icon: 'mdi-map-marker',
+        to: '/maps/google-maps'
       }
+      // {
+      //   title: 'notifications',
+      //   icon: 'mdi-bell',
+      //   to: '/components/notifications'
+      // }
     ]
   }),
 

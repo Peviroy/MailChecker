@@ -52,7 +52,7 @@ class BiLSTM_Wrapper:
         else:
             CHECKPOINT_PATH = 'checkpoints/glove100.npy'
 
-        if not os.path.exists(FILE_PATH) and not os.path.isfile(CHECKPOINT_PATH):
+        if not os.path.exists(CHECKPOINT_PATH) and not os.path.exists(FILE_PATH):
             raise FileExistsError('Glove file not founded')
         if os.path.exists(CHECKPOINT_PATH):
             embeddings_matrix = np.load(CHECKPOINT_PATH)

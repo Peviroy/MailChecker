@@ -1,301 +1,288 @@
 <template>
-  <v-container
-    id="icons"
-    fluid
-    tag="section"
-  >
-    <base-v-component
-      heading="Icons"
-      link="components/icons"
-    />
+  <v-container id="Dash" fluid tag="section">
+    <!-- <base-v-component heading="Icons" link="components/icons" /> -->
+    <v-row id="checker">
+      <div id="main">
+        <div class="container1">
+          <h2>MailChecker</h2>
 
-    <v-row>
-      <v-col cols="12">
-        <base-material-card color="green">
-          <template v-slot:heading>
-            <div class="display-2 font-weight-light">
-              Material Design Icons
+          <form>
+            <div class="input-field">
+              <textarea required="required" name="query" autofocus></textarea>
+              <label for>Type in mail text for identify</label>
+              <span></span>
             </div>
 
-            <div class="subtitle-1 font-weight-light">
-              See all available
-              <a
-                class="white--text"
-                href="https://materialdesignicons.com/"
-                target="_blank"
-              >
-                Icons
-              </a>
-            </div>
-          </template>
+            <v-container id="dropdown-example-1">
+              <v-overflow-btn
+                class="my-2"
+                :items="dropdown_font"
+                label="Choose a type"
+                target="#dropdown-example-1"
+              ></v-overflow-btn>
+            </v-container>
 
-          <v-row
-            align="center"
-            justify="center"
-          >
-            <v-col
-              v-for="icon in icons"
-              :key="icon"
-              class="ma-2"
-            >
-              <v-tooltip
-                content-class="top"
-                top
-              >
-                <template v-slot:activator="{ attrs, on }">
-                  <v-icon
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    {{ icon }}
-                  </v-icon>
-                </template>
-                <span>{{ icon }}</span>
-              </v-tooltip>
-            </v-col>
-          </v-row>
-        </base-material-card>
-      </v-col>
+            <input type="submit" value="Show Result" class="btn" @click="getPredicted" />
+          </form>
+        </div>
 
-      <v-col
-        class="mx-auto"
-        cols="auto"
-      >
-        <v-btn
-          color="success"
-          href="https://materialdesignicons.com/"
-          large
-          target="_blank"
-        >
-          <v-icon left>
-            mdi-material-design
-          </v-icon>
-          <span>See all icons</span>
-        </v-btn>
-      </v-col>
+        <div id="output">
+          <h3>Predict</h3>
+          <div>
+            <textarea id="content" readonly v-model="serverResponse"></textarea>
+          </div>
+        </div>
+      </div>
     </v-row>
   </v-container>
 </template>
 
 <script>
-  export default {
-    name: 'DashboardIcons',
+import axios from 'axios';
+export default {
+  name: 'DashboardIcons',
+  data() {
+    return {
+      serverResponse: 'Click to get prediction2',
+      picked: '',
+      switch1: '',
+      dropdown_font: ['ham', 'spam']
+    };
+  },
 
-    data: () => ({
-      icons: [
-        'mdi-access-point',
-        'mdi-access-point-network',
-        'mdi-account',
-        'mdi-account-alert',
-        'mdi-account-box',
-        'mdi-account-box-multiple',
-        'mdi-account-box-outline',
-        'mdi-account-card-details',
-        'mdi-account-check',
-        'mdi-account-circle',
-        'mdi-account-convert',
-        'mdi-account-edit',
-        'mdi-account-group',
-        'mdi-account-heart',
-        'mdi-account-key',
-        'mdi-account-location',
-        'mdi-account-minus',
-        'mdi-account-multiple',
-        'mdi-account-multiple-check',
-        'mdi-account-multiple-minus',
-        'mdi-account-multiple-outline',
-        'mdi-account-multiple-plus',
-        'mdi-account-multiple-plus-outline',
-        'mdi-account-network',
-        'mdi-account-off',
-        'mdi-account-outline',
-        'mdi-account-plus',
-        'mdi-account-plus-outline',
-        'mdi-account-remove',
-        'mdi-account-search',
-        'mdi-account-search-outline',
-        'mdi-account-settings',
-        'mdi-account-settings-variant',
-        'mdi-account-star',
-        'mdi-account-switch',
-        'mdi-accusoft',
-        'mdi-adjust',
-        'mdi-adobe',
-        'mdi-air-conditioner',
-        'mdi-airballoon',
-        'mdi-airplane',
-        'mdi-airplane-landing',
-        'mdi-airplane-off',
-        'mdi-airplane-takeoff',
-        'mdi-airplay',
-        'mdi-airport',
-        'mdi-alarm',
-        'mdi-alarm-bell',
-        'mdi-alarm-check',
-        'mdi-alarm-light',
-        'mdi-alarm-multiple',
-        'mdi-alarm-off',
-        'mdi-alarm-plus',
-        'mdi-alarm-snooze',
-        'mdi-album',
-        'mdi-alert',
-        'mdi-alert-box',
-        'mdi-alert-circle',
-        'mdi-alert-circle-outline',
-        'mdi-alert-decagram',
-        'mdi-alert-octagon',
-        'mdi-alert-octagram',
-        'mdi-alert-outline',
-        'mdi-alien',
-        'mdi-all-inclusive',
-        'mdi-alpha',
-        'mdi-alphabetical',
-        'mdi-altimeter',
-        'mdi-amazon',
-        'mdi-amazon-alexa',
-        'mdi-amazon-drive',
-        'mdi-ambulance',
-        'mdi-amplifier',
-        'mdi-anchor',
-        'mdi-android',
-        'mdi-android-debug-bridge',
-        'mdi-android-head',
-        'mdi-android-studio',
-        'mdi-angle-acute',
-        'mdi-angle-obtuse',
-        'mdi-angle-right',
-        'mdi-angular',
-        'mdi-angularjs',
-        'mdi-animation',
-        'mdi-animation-play',
-        'mdi-anvil',
-        'mdi-apple',
-        'mdi-apple-finder',
-        'mdi-apple-icloud',
-        'mdi-apple-ios',
-        'mdi-apple-keyboard-caps',
-        'mdi-apple-keyboard-command',
-        'mdi-apple-keyboard-control',
-        'mdi-apple-keyboard-option',
-        'mdi-apple-keyboard-shift',
-        'mdi-apple-safari',
-        'mdi-application',
-        'mdi-approval',
-        'mdi-apps',
-        'mdi-arch',
-        'mdi-archive',
-        'mdi-arrange-bring-forward',
-        'mdi-arrange-bring-to-front',
-        'mdi-arrange-send-backward',
-        'mdi-arrange-send-to-back',
-        'mdi-arrow-all',
-        'mdi-arrow-bottom-left',
-        'mdi-arrow-bottom-left-bold-outline',
-        'mdi-arrow-bottom-left-thick',
-        'mdi-arrow-bottom-right',
-        'mdi-arrow-bottom-right-bold-outline',
-        'mdi-arrow-bottom-right-thick',
-        'mdi-arrow-collapse',
-        'mdi-arrow-collapse-all',
-        'mdi-arrow-collapse-down',
-        'mdi-arrow-collapse-horizontal',
-        'mdi-arrow-collapse-left',
-        'mdi-arrow-collapse-right',
-        'mdi-arrow-collapse-up',
-        'mdi-arrow-collapse-vertical',
-        'mdi-arrow-decision',
-        'mdi-arrow-decision-auto',
-        'mdi-arrow-decision-auto-outline',
-        'mdi-arrow-decision-outline',
-        'mdi-arrow-down',
-        'mdi-arrow-down-bold',
-        'mdi-arrow-down-bold-box',
-        'mdi-arrow-down-bold-box-outline',
-        'mdi-arrow-down-bold-circle',
-        'mdi-arrow-down-bold-circle-outline',
-        'mdi-arrow-down-bold-hexagon-outline',
-        'mdi-arrow-down-bold-outline',
-        'mdi-arrow-down-box',
-        'mdi-arrow-down-drop-circle',
-        'mdi-arrow-down-drop-circle-outline',
-        'mdi-arrow-down-thick',
-        'mdi-arrow-expand',
-        'mdi-arrow-expand-all',
-        'mdi-arrow-expand-down',
-        'mdi-arrow-expand-horizontal',
-        'mdi-arrow-expand-left',
-        'mdi-arrow-expand-right',
-        'mdi-arrow-expand-up',
-        'mdi-arrow-expand-vertical',
-        'mdi-arrow-left',
-        'mdi-arrow-left-bold',
-        'mdi-arrow-left-bold-box',
-        'mdi-arrow-left-bold-box-outline',
-        'mdi-arrow-left-bold-circle',
-        'mdi-arrow-left-bold-circle-outline',
-        'mdi-arrow-left-bold-hexagon-outline',
-        'mdi-arrow-left-bold-outline',
-        'mdi-arrow-left-box',
-        'mdi-arrow-left-drop-circle',
-        'mdi-arrow-left-drop-circle-outline',
-        'mdi-arrow-left-right-bold-outline',
-        'mdi-arrow-left-thick',
-        'mdi-arrow-right',
-        'mdi-arrow-right-bold',
-        'mdi-arrow-right-bold-box',
-        'mdi-arrow-right-bold-box-outline',
-        'mdi-arrow-right-bold-circle',
-        'mdi-arrow-right-bold-circle-outline',
-        'mdi-arrow-right-bold-hexagon-outline',
-        'mdi-arrow-right-bold-outline',
-        'mdi-arrow-right-box',
-        'mdi-arrow-right-drop-circle',
-        'mdi-arrow-right-drop-circle-outline',
-        'mdi-arrow-right-thick',
-        'mdi-arrow-split-horizontal',
-        'mdi-arrow-split-vertical',
-        'mdi-arrow-top-left',
-        'mdi-arrow-top-left-bold-outline',
-        'mdi-arrow-top-left-thick',
-        'mdi-arrow-top-right',
-        'mdi-arrow-top-right-bold-outline',
-        'mdi-arrow-top-right-thick',
-        'mdi-arrow-up',
-        'mdi-arrow-up-bold',
-        'mdi-arrow-up-bold-box',
-        'mdi-arrow-up-bold-box-outline',
-        'mdi-arrow-up-bold-circle',
-        'mdi-arrow-up-bold-circle-outline',
-        'mdi-arrow-up-bold-hexagon-outline',
-        'mdi-arrow-up-bold-outline',
-        'mdi-arrow-up-box',
-        'mdi-arrow-up-down-bold-outline',
-        'mdi-arrow-up-drop-circle',
-        'mdi-arrow-up-drop-circle-outline',
-        'mdi-arrow-up-thick',
-        'mdi-artist',
-        'mdi-assistant',
-        'mdi-asterisk',
-        'mdi-at',
-        'mdi-atlassian',
-        'mdi-atom',
-        'mdi-attachment',
-        'mdi-audio-video',
-        'mdi-audiobook',
-        'mdi-augmented-reality',
-        'mdi-auto-fix',
-        'mdi-auto-upload',
-        'mdi-autorenew',
-        'mdi-av-timer',
-        'mdi-axe',
-        'mdi-azure',
-        'mdi-baby',
-        'mdi-baby-buggy',
-        'mdi-backburger',
-        'mdi-backspace',
-        'mdi-backup-restore',
-        'mdi-badminton',
-      ],
-    }),
+  methods: {
+    getRadioVal() {
+      console.log(this.radioVal);
+    },
+    TextAreagoEnd() {
+      var textArea = document.getElementById('content');
+      textArea.scrollTop = textArea.scrollHeight;
+    },
+    getPredicted(event) {
+      event.preventDefault();
+      // 对应 Python 提供的接口，这里的地址填写下面服务器运行的地址，本地则为127.0.0.1，外网则为 your_ip_address
+      const path = 'http://127.0.0.1:5000/getMsg';
+      axios
+        .get(path)
+        .then((response) => {
+          // 这里服务器返回的 response 为一个 json object，可通过如下方法需要转成 json 字符串
+          // 可以直接通过 response.data 取key-value
+          var msg = response.data.msg;
+          this.serverResponse = msg;
+          console.log(msg);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }
   }
+};
 </script>
+
+<style>
+#checker {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  text-align: left;
+  min-height: 100vh;
+  background: rgb(rgb(0, 0, 0));
+}
+
+#title {
+  color: rgb(0, 0, 0);
+  margin-bottom: 20px;
+}
+
+.container1 {
+  border-radius: 15px;
+  position: relative;
+  width: 700px;
+  padding: 20px;
+  background: rgb(255, 227, 171);
+}
+
+.container1 h2 {
+  color: #999;
+  font-weight: lighter;
+  margin-bottom: 45px;
+}
+
+.input-field {
+  position: relative;
+  height: 220px;
+  width: 100%;
+}
+
+.input-field label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #555;
+  pointer-events: none;
+  display: block;
+  transition: 0.5s;
+  letter-spacing: 1px;
+}
+
+.input-field textarea {
+  position: absolute;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  font-size: 16px;
+  color: rgb(0, 0, 0);
+  width: 100%;
+  height: 210px;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  line-height: 24px;
+}
+
+.input-field textarea:focus + label,
+.input-field textarea:valid + label {
+  transform: translateY(-35px);
+  font-size: 14px;
+  color: rgb(2, 2, 2);
+  background: #ff006a;
+  padding: 5px 2px;
+}
+
+.input-field span {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: block;
+  background: #555;
+  width: 100%;
+  height: 2px;
+}
+
+.input-field span:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(255, 181, 30);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s ease-in-out;
+}
+
+.input-field textarea:focus ~ span:before,
+.input-field textarea:valid ~ span:before {
+  transform: scaleX(1);
+  transform-origin: right;
+  transition: transform 0.5s ease-in-out;
+}
+
+.btn {
+  margin-top: 20px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: none;
+  padding: 10px 25px;
+  background: rgb(255, 181, 30);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: rgb(206, 191, 191);
+}
+
+#output {
+  margin-top: 20px;
+  color: rgb(0, 0, 0);
+  height: auto;
+}
+
+#output div {
+  border: 0;
+  border-radius: 20px;
+  background-color: rgb(255, 227, 171);
+  width: 100%;
+}
+
+#output textarea {
+  background-color: transparent;
+  border: 0;
+  width: 100%;
+  height: 300px;
+
+  color: rgb(0, 0, 0);
+  resize: none;
+  outline: none;
+  text-align: center;
+  padding: 10px;
+}
+
+/* Sidebar */
+#checker {
+  transition: background-color 0.5s;
+}
+
+/*侧边栏选择器*/
+.sidenav {
+  height: 100%;
+  width: 0; /*原始宽度*/
+  position: fixed;
+  /*z-index、top、left共同控制侧栏的悬浮（上方1，下方-1）*/
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s; /*侧栏延迟0.5s显示*/
+  padding-top: 60px;
+}
+
+/*侧边栏标签选择器*/
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s; /*标签延迟0.3s显示*/
+}
+
+.sidenav a.sid {
+  font-size: 15px;
+}
+
+.sidenav a:hover,
+.offcanvas a:focus {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+#main {
+  transition: margin-left 0.5s;
+  padding: 16px;
+}
+
+/*when page height < 450，adjust the padding as well as the font size of sidepar*/
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav a {
+    font-size: 18px;
+  }
+}
+</style>
