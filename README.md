@@ -15,6 +15,9 @@
 
 基于 SMS Spam 邮箱分类课题所制作的集 Web 与 AIsolution 于一体的项目
 
+所使用的前端框架为 Vue，位于 frontend 目录之中，
+所使用的后端框架为 Flask，文件为 app.py，接洽模型的业务定义在 backend 之中
+
 <!-- GETTING STARTED-->
 
 ## Developing
@@ -48,6 +51,7 @@
 ├── README.md
 ├── requirements.txt
 ├── run.py   --starter of flask | entry of project
+├── main.py  --train model
 └── test
     └── ...
 
@@ -97,7 +101,7 @@ cd MailChcker
 2. Install python package
 
 ```sh
-python -r requirements.txt
+pip install -r requirements.txt
 ```
 
 3. Install python package
@@ -131,8 +135,51 @@ yarn run serve
 
 #### Solution part:
 
-当前一方面是因为尚未完成模型的全面工作，另一方面是因为设计的模式为 api 模式，因而尚未设计 main 入口函数，而单纯是提供了几个简单的 api。
-solution 方面的进展可以见 display/data_evaluate.ipynb
+针对于邮箱分类，我们设计了朴素贝叶斯分类器、BiLSTM-Attention 分类器以及 LSTM 生成器共计三种模型。
+模型位于 model 文件夹之中，根目录下的 main.py 负责了后两者的训练以及预测等开发环境所需的功能
+
+### Deploy
+
+1. Gunicorn
+   Gunicorn 为一个轻量级高性能的 Web 服务。之所以不选择 flask 直接用于生产环境的原因在于 flask 毕竟主要是作为一个框架而存在，虽然有服务端配备，但并不出彩。
+   而 Gunicorn 采用纯 python 构造，能够快速通过 pip 安装
+
+```sh
+pip install gunicorn
+```
+
+2. Nginx
+   Nginx 在此处起到的作用为处理高并发情况，并且进行反向代理
+
+```
+server {
+    listen <监听的端口>;
+
+    server_name <监听的域名>;
+
+    access_log  /var/log/nginx/access.log;
+    error_log  /var/log/nginx/error.log;
+
+    location / {
+        proxy_pass         http://127.0.0.1:5000/ ; # 中转向的url
+        proxy_redirect     off;
+
+        proxy_set_header   Host             $http_host;
+        proxy_set_header   X-Real-IP        $remote_addr;
+        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+
+    }
+
+    location /media  {
+        alias /usr/share/nginx/html/media;
+    }
+
+    location /static  {
+        alias /usr/share/nginx/html/static;
+    }
+}
+
+```
 
 <!-- USAGE EXAMPLES
 ## Usage
