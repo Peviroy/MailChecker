@@ -29,9 +29,6 @@ def test():
         'Even my brother is not like to speak with me. They treat me like aids patent'))
 
 
-test()
-
-
 @app.after_request
 def add_header(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -49,30 +46,31 @@ def index():
 @app.route('/getPredict', methods=['POST'])
 def predict():
     data = json.loads(request.get_data(as_text=True))
+    print(data)
     mailcontent = data['content']
     model_type = data['model']
     img_path = ''
     prob = ''
-    if model_type == 'Two':
-        prediction, img_path = bc.predict(mailcontent)
-    else:
+    if model_type == 'Model1':
         prediction, prob = nbc.predict(mailcontent)
+    else:
+        prediction, img_path = bc.predict(mailcontent)
     response = {
         'msg': prediction,
         'imgPath': img_path,
         'prob': prob
     }
     print(response)
-    print(data)
     return jsonify(response)
 
 
 @app.route('/getContent', methods=['POST'])
 def generator():
     data = json.loads(request.get_data(as_text=True))
+    print(data)
     mailcontent = data['content']
     mailtype = data['type']
-    nextwords = data['nextwords']
+    nextwords = 50
 
     if mailtype == 'ham':
         content_generated = lgc_h.predict(mailcontent, nextwords)
@@ -82,7 +80,6 @@ def generator():
     response = {
         'msg': content_generated,
     }
-    print(data)
     return jsonify(response)
 
 

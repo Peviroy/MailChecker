@@ -8,26 +8,30 @@
 
           <form>
             <div class="input-field">
-              <textarea required="required" name="query" autofocus></textarea>
+              <textarea required="required" name="query" autofocus v-model="mailcontent_input"></textarea>
               <label for>Type in mail text for identify</label>
               <span></span>
             </div>
 
-            <v-container id="dropdown-example-1">
+            <v-container id="model-example-2">
               <v-overflow-btn
                 class="my-2"
-                :items="dropdown_font"
-                label="Choose a type"
-                target="#dropdown-example-1"
+                :items="dropdown_selector"
+                label="Choose a model"
+                target="#model_example_2"
+                dense
+                loading
+                menu-props="top"
+                v-model="selected_model"
               ></v-overflow-btn>
             </v-container>
 
-            <input type="submit" value="Show Result" class="btn" @click="getPredicted" />
+            <input type="submit" value="Show Result" class="btn" @click="getContent" />
           </form>
         </div>
 
         <div id="output">
-          <h3>Predict</h3>
+          <h3>Generate</h3>
           <div>
             <textarea id="content" readonly v-model="serverResponse"></textarea>
           </div>
@@ -43,10 +47,11 @@ export default {
   name: 'DashboardIcons',
   data() {
     return {
-      serverResponse: 'Click to get prediction2',
-      picked: '',
-      switch1: '',
-      dropdown_font: ['ham', 'spam']
+      serverResponse: 'Click to get prediction',
+      dropdown_selector: ['Ham', 'Spam'],
+
+      mailcontent_input: '',
+      selected_model: null
     };
   },
 
@@ -58,18 +63,17 @@ export default {
       var textArea = document.getElementById('content');
       textArea.scrollTop = textArea.scrollHeight;
     },
-    getPredicted(event) {
+    getContent(event) {
       event.preventDefault();
-      // 对应 Python 提供的接口，这里的地址填写下面服务器运行的地址，本地则为127.0.0.1，外网则为 your_ip_address
-      const path = 'http://127.0.0.1:5000/getMsg';
+      const path = 'http://127.0.0.1:5000/getContent';
       axios
-        .get(path)
+        .post(path, {
+          content: this.mailcontent_input,
+          type: this.selected_model
+        })
         .then((response) => {
-          // 这里服务器返回的 response 为一个 json object，可通过如下方法需要转成 json 字符串
-          // 可以直接通过 response.data 取key-value
           var msg = response.data.msg;
           this.serverResponse = msg;
-          console.log(msg);
         })
         .catch(function(error) {
           console.log(error);

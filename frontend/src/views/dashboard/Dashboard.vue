@@ -2,28 +2,26 @@
   <v-container id="dashboard" fluid tag="section">
     <v-row id="checker">
       <div id="main">
-        <!-- <div id="title">
-          <h1>MailChecker</h1>
-        </div> -->
-
         <div class="container1">
           <h2>MailChecker</h2>
 
           <form>
             <div class="input-field">
-              <textarea required="required" name="query" autofocus v-model="mailcontent"></textarea>
+              <textarea required="required" name="query" autofocus v-model="mailcontent_input"></textarea>
               <label for>Type in mail text for identify</label>
               <span></span>
             </div>
 
-            <!-- <v-switch v-model="switch1" :label="`model 1: ${switch1.toString()}`"></v-switch> -->
-
-            <v-container id="dropdown-example-1">
+            <v-container id="model_selector_1">
               <v-overflow-btn
                 class="my-2"
-                :items="dropdown_font"
+                :items="dropdown_selector"
                 label="Choose a model"
-                target="#dropdown-example-1"
+                target="#model_selector_1"
+                dense
+                loading
+                menu-props="top"
+                v-model="selected_model"
               ></v-overflow-btn>
             </v-container>
             <!-- <div id="choose">
@@ -58,99 +56,23 @@ export default {
 
   data() {
     return {
-      serverResponse: 'Click to get prediction2',
-      picked: '',
-      switch1: '',
-      dropdown_font: ['Model1', 'Model2'],
-      dailySalesChart: {
-        data: {
-          labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-          series: [[12, 17, 7, 17, 23, 18, 38]]
-        },
-        options: {
-          lineSmooth: this.$chartist.Interpolation.cardinal({
-            tension: 0
-          }),
-          low: 0,
-          high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-          chartPadding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0
-          }
-        }
-      },
-      dataCompletedTasksChart: {
-        data: {
-          labels: ['12am', '3pm', '6pm', '9pm', '12pm', '3am', '6am', '9am'],
-          series: [[230, 750, 450, 300, 280, 240, 200, 190]]
-        },
-        options: {
-          lineSmooth: this.$chartist.Interpolation.cardinal({
-            tension: 0
-          }),
-          low: 0,
-          high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-          chartPadding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0
-          }
-        }
-      },
-      emailsSubscriptionChart: {
-        data: {
-          labels: ['Ja', 'Fe', 'Ma', 'Ap', 'Mai', 'Ju', 'Jul', 'Au', 'Se', 'Oc', 'No', 'De'],
-          series: [[542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]]
-        },
-        options: {
-          axisX: {
-            showGrid: false
-          },
-          low: 0,
-          high: 1000,
-          chartPadding: {
-            top: 0,
-            right: 5,
-            bottom: 0,
-            left: 0
-          }
-        },
-        responsiveOptions: [
-          [
-            'screen and (max-width: 640px)',
-            {
-              seriesBarDistance: 5,
-              axisX: {
-                labelInterpolationFnc: function(value) {
-                  return value[0];
-                }
-              }
-            }
-          ]
-        ]
-      }
+      serverResponse: 'Click to get prediction',
+      dropdown_selector: ['Model1', 'Model2'],
+
+      mailcontent_input: null,
+      selected_model: null
     };
   },
-
   methods: {
-    getRadioVal() {
-      console.log(this.radioVal);
-    },
-    TextAreagoEnd() {
-      var textArea = document.getElementById('content');
-      textArea.scrollTop = textArea.scrollHeight;
-    },
     getPredicted(event) {
       event.preventDefault();
       // 对应 Python 提供的接口，这里的地址填写下面服务器运行的地址，本地则为127.0.0.1，外网则为 your_ip_address
+      // TODO: auto adjust url
       const path = 'http://127.0.0.1:5000/getPredict';
       axios
         .post(path, {
-          content: this.mailcontent,
-          model: this.picked
+          content: this.mailcontent_input,
+          model: this.selected_model
         })
         .then((response) => {
           // 这里服务器返回的 response 为一个 json object，可通过如下方法需要转成 json 字符串
@@ -159,10 +81,10 @@ export default {
           var prob = response.data.prob;
 
           var display;
-          if (this.picked === 'Two') {
-            display = `${prediction.toUpperCase()}`;
-          } else {
+          if (this.selected_model === 'Model1') {
             display = `${prediction.toUpperCase()}     Score  ${prob.toFixed(4) * 100}`;
+          } else {
+            display = `${prediction.toUpperCase()}`;
           }
           this.serverResponse = display;
         })
