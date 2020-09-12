@@ -38,7 +38,7 @@ parser.add_argument('--save', default='./checkpoints/model_ham/',
                     help='dir for saving document file')
 parser.add_argument('--lr', default='0.001', type=float,
                     help='learning rate(default: 0.001)')
-parser.add_argument('--lr-decay-step', default='250', type=int,
+parser.add_argument('--lr-decay-step', default='600', type=int,
                     help='lr decayed by 10 every step', dest='lr_decay_step')
 parser.add_argument('--weight-decay', default=5e-4, type=float,
                     help='weight decay (default: 5e-4)', dest='weight_decay')
