@@ -9,6 +9,5 @@
 **/__pycache__
 
 private
-checkpoints/*
 
 data/glove*

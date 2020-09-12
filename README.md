@@ -13,23 +13,7 @@
 
 ## About The Project
 
-施工中
-
-## Progress
-
--   2020.09.03:
-
-    1. 进行了数据预处理，完成了数据集的提纯
-    2. 加入 display 模块，可视化数据处理逻辑——Jupyterbook for show
-    3. 引入测试模块 pytest，用于单元测试
-
--   2020.09.04:
-
-    1. 集成 Web 模块，选用 Flask-Vue 前后端分离开发
-
--   2020.09.05-06:
-    1. 简单地调整了页面显示以符合基础需求
-    2. 协调前后端开发的交互
+基于 SMS Spam 邮箱分类课题所制作的集 Web 与 AIsolution 于一体的项目
 
 <!-- GETTING STARTED-->
 
@@ -52,6 +36,10 @@
 ├── data
 │   └── ...
 ├── dataset
+│   └── ...
+├── checkpoints
+│   └── ...
+├── models
 │   └── ...
 ├── utils
 │   └── ...
@@ -84,13 +72,18 @@ yarn global add @vue/cli
 #### For solution development
 
 -   python3 env
-    -   numpy==1.19.1
-    -   Flask==1.1.2
+    -   scipy==1.4.1
+    -   joblib==0.16.0
     -   Flask_Cors==3.0.9
+    -   matplotlib==3.2.1
+    -   pandas==1.0.3
+    -   nltk==3.5
+    -   torchvision==0.7.0
+    -   Flask==1.1.2
+    -   numpy==1.16.4
+    -   torch==1.6.0
     -   ipython==7.18.1
-    -   matplotlib==3.3.1
-    -   pandas==1.1.1
-    -   pytest==6.0.1
+    -   scikit_learn==0.23.2
 
 ### 3.Installation
 
