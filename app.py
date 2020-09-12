@@ -83,6 +83,24 @@ def generator():
     return jsonify(response)
 
 
+@ app.route('/getCsv', methods=['GET'])
+def csvread():
+    import os
+    base_dir = os.path.dirname(__file__)
+    import pandas as pd
+    csv_data = pd.read_csv(os.path.join(
+        base_dir, 'data/spam.csv'), encoding='latin-1')
+    csv_0 = csv_data[csv_data['v1'] == 'ham'].sample(5)
+    message0 = csv_0['v2'].values.tolist()  # 随机选取5条标记为普通邮件的正文内容
+    csv_1 = csv_data[csv_data['v1'] == 'spam'].sample(5)
+    message1 = csv_1['v2'].values.tolist()  # 随机选取5条标记为垃圾邮件的正文内容
+    response = {
+        "message0": message0,
+        "message1": message1,
+    }
+    return jsonify(response)
+
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('index.html'), 404

@@ -75,8 +75,6 @@ export default {
           model: this.selected_model
         })
         .then((response) => {
-          // 这里服务器返回的 response 为一个 json object，可通过如下方法需要转成 json 字符串
-          // 可以直接通过 response.data 取key-value
           var prediction = response.data.msg;
           var prob = response.data.prob;
 

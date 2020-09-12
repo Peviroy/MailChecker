@@ -5,6 +5,5 @@
 	"python.linting.flake8Enabled": true,
 	"python.linting.flake8Args": ["--ignore=E402, E501", "--verbose"],
 	"python.linting.pylintEnabled": true,
-	"python.linting.enabled": true,
-	"python.pythonPath": "/home/penguinviceroy/miniconda3/envs/Ptorch/bin/python"
+	"python.linting.enabled": true
 }
