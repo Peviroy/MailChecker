@@ -24,15 +24,6 @@
                 v-model="selected_model"
               ></v-overflow-btn>
             </v-container>
-            <!-- <div id="choose">
-              <input type="radio" id="one" value="One" v-model="picked" />
-              <label for="one">模型1</label>
-              <br />
-              <input type="radio" id="two" value="Two" v-model="picked" />
-              <label for="two">模型2</label>
-              <br />
-              <span>selected: {{ picked }}</span>
-            </div> -->
             <input type="submit" value="Show Result" class="btn" @click="getPredicted" />
           </form>
         </div>
@@ -66,9 +57,10 @@ export default {
   methods: {
     getPredicted(event) {
       event.preventDefault();
-      // 对应 Python 提供的接口，这里的地址填写下面服务器运行的地址，本地则为127.0.0.1，外网则为 your_ip_address
-      // TODO: auto adjust url
-      const path = 'http://127.0.0.1:5000/getPredict';
+      let baseURL = process.env.VUE_APP_BASEURL;
+      const path = baseURL + '/getPredict';
+      console.log(baseURL);
+
       axios
         .post(path, {
           content: this.mailcontent_input,

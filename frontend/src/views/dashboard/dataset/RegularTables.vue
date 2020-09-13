@@ -51,7 +51,9 @@ export default {
   //页面创建时调用:
   created() {
     //console.log('created');
-    const path = 'http://127.0.0.1:5000/getCsv';
+    let baseURL = process.env.VUE_APP_BASEURL;
+
+    const path = baseURL + '/getCsv';
     axios
       .get(path)
       .then((response) => {

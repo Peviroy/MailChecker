@@ -65,7 +65,9 @@ export default {
     },
     getContent(event) {
       event.preventDefault();
-      const path = 'http://127.0.0.1:5000/getContent';
+      let baseURL = process.env.VUE_APP_BASEURL;
+
+      const path = baseURL + '/getContent';
       axios
         .post(path, {
           content: this.mailcontent_input,
