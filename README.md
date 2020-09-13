@@ -18,6 +18,8 @@
 所使用的前端框架为 Vue，位于 frontend 目录之中，
 所使用的后端框架为 Flask，文件为 app.py，接洽模型的业务定义在 backend 之中
 
+example website: [Mailchecker](http://penguinuniverse.top:8899)
+
 <!-- GETTING STARTED-->
 
 ## Developing
@@ -132,6 +134,9 @@ yarn run serve
 
 3. Build test:
    使用`yarn run build`生成 dist 目录，此时单独启动 flask 便是最终的 web 效果
+
+4. For development mode, run step1, and step2, visit website via localhost:8080;
+5. For production mode, change VUE_APP_BASEURL in g.env.production
 
 #### Solution part:
 
