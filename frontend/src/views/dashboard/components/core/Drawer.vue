@@ -68,12 +68,17 @@ export default {
       {
         title: 'Generator lab',
         icon: 'mdi-chart-bubble',
-        to: '/components/icons'
+        to: '/generator'
       },
       {
         title: 'Word analysis',
         icon: 'mdi-map-marker',
         to: '/dataset/WordAnalysis'
+      },
+      {
+        title: 'Lucky dog',
+        icon: 'mdi-chart-bubble',
+        to: '/NotFound'
       }
     ]
   }),

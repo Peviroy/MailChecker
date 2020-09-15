@@ -11,16 +11,15 @@ export default new Router({
       path: '/',
       component: () => import('@/views/dashboard/Index'),
       children: [
-        // Dashboard
         {
-          name: 'Dashboard',
+          name: 'Predictor',
           path: '',
-          component: () => import('@/views/dashboard/Dashboard')
+          component: () => import('@/views/dashboard/Predictor')
         },
         {
           name: 'Generator lab',
-          path: 'components/icons',
-          component: () => import('@/views/dashboard/component/Icons')
+          path: 'generator',
+          component: () => import('@/views/dashboard/Generator')
         },
         // Tables
         {

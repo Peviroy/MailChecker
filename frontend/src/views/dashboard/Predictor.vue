@@ -9,7 +9,7 @@ import inoutputer from '@/components/inoutPuter';
 import axios from 'axios';
 
 export default {
-  name: 'DashboardDashboard',
+  name: 'DashboardPredictor',
 
   components: {
     inoutputer

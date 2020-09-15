@@ -14,7 +14,7 @@ import inoutputer from '@/components/inoutPuter';
 import axios from 'axios';
 
 export default {
-  name: 'DashboardIcons',
+  name: 'DashboardGenerator',
 
   components: {
     inoutputer
