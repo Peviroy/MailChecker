@@ -4,36 +4,37 @@
       <div id="main">
         <h2 class="myTitle">{{ titleInput }}</h2>
 
-        <div class="input-container">
-          <h2>{{ titleInnerInput }}</h2>
+        <div class="iContainer">
+          <h2 class="iContainer__innerTitle">{{ titleInnerInput }}</h2>
 
           <form>
-            <div class="input-field">
+            <div class="iContainer__inputField">
               <textarea required="required" name="query" autofocus v-model="mailcontent_input"></textarea>
-              <label for>Type in mail text for identify</label>
+              <label>Type in mail text for identify</label>
               <span></span>
             </div>
 
-            <v-container id="model_selector_1">
+            <v-container id="iContainer__modelSelector">
               <v-overflow-btn
                 class="my-2"
                 :items="dropdown_selector"
                 label="Choose a model"
-                target="#model_selector_1"
+                target="#iContainer__modelSelector"
                 dense
                 loading
                 menu-props="top"
                 v-model="selected_model"
               ></v-overflow-btn>
             </v-container>
-            <input type="submit" value="Show Result" class="btn" @click="getPredicted" />
+            <input type="submit" value="Show Result" class="iContainer__btn" @click="getPredicted" />
           </form>
         </div>
 
         <h3 class="myTitle">{{ titleOutput }}</h3>
-        <div id="output-container">
+        <div class="oContainer">
+          <h2 class="oContainer__innerTitle">{{ titleInnerOutput }}</h2>
           <div>
-            <textarea id="content" readonly v-model="serverResponse"></textarea>
+            <textarea class="oContainer__content" readonly v-model="serverResponse"></textarea>
           </div>
         </div>
       </div>
@@ -51,6 +52,7 @@ export default {
     return {
       titleInput: 'MailChecker',
       titleInnerInput: 'MailChecker',
+      titleInnerOutput: '',
       titleOutput: 'Predict',
 
       serverResponse: 'Click to get prediction',
@@ -92,6 +94,7 @@ export default {
 };
 </script>
 <style lang="scss">
+/* root */
 #inoutputer {
   margin: 0;
   padding: 0;
@@ -104,52 +107,70 @@ export default {
 }
 
 .myTitle {
-  color: rgb(0, 0, 0);
+  color: rgb(0, 0, 0); //titleColor
   margin-bottom: 20px;
 }
 
 /* input-container */
-.input-container {
+.iContainer {
   border-radius: 15px;
   position: relative;
   width: 700px;
   padding: 20px;
-  background: rgb(255, 227, 171);
+  background: rgb(255, 227, 171); // containerColor
+  margin-bottom: 20px;
+
   /* container inner title */
-  h2 {
-    color: #999;
+  &__innerTitle {
+    color: #999; //innerTitleColor
     font-weight: lighter;
     margin-bottom: 40px;
     font-size: 1.2rem;
   }
 
-  margin-bottom: 20px;
+  &__btn {
+    margin-top: 20px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: none;
+    padding: 10px 25px;
+    background: rgb(255, 181, 30); // buttonBackground
+    color: #fff; // buttonFont
+    font-size: 16px;
+    cursor: pointer;
+
+    &:hover {
+      background: rgb(206, 191, 191); // buttonHover
+    }
+  }
 }
 
 /* sub of input-container */
-.input-field {
+.iContainer__inputField {
   position: relative;
   height: 220px;
   width: 100%;
 
+  /* label for input area */
   label {
     position: absolute;
     top: 0;
     left: 0;
-    color: #555;
+    color: #555; // labelColor_before
     pointer-events: none;
     display: block;
     transition: 0.5s;
     letter-spacing: 1px;
   }
 
+  /* input area */
   textarea {
     position: absolute;
     background: transparent;
     box-shadow: none;
     border: none;
     font-size: 16px;
-    color: rgb(0, 0, 0);
+    color: rgb(0, 0, 0); // fontColor
     width: 100%;
     height: 210px;
     outline: none;
@@ -161,8 +182,8 @@ export default {
     &:valid + label {
       transform: translateY(-35px);
       font-size: 14px;
-      color: rgb(0, 0, 0);
-      background: #ff006a;
+      color: rgb(0, 0, 0); // labelColorAfter
+      background: #ff006a; // labelBackground
       padding: 5px 2px;
     }
 
@@ -174,12 +195,13 @@ export default {
     }
   }
 
+  /* marker bar of inputFiled */
   span {
     position: absolute;
     bottom: 0;
     right: 0;
     display: block;
-    background: #555;
+    background: #555; // lineColor_before
     width: 100%;
     height: 2px;
 
@@ -190,7 +212,7 @@ export default {
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgb(255, 181, 30);
+      background: rgb(255, 181, 30); // lineColor_after
       transform: scaleX(0);
       transform-origin: right;
       transition: transform 0.5s ease-in-out;
@@ -198,43 +220,27 @@ export default {
   }
 }
 
-.btn {
-  margin-top: 20px;
-  border: none;
-  border-radius: 10px;
-  box-shadow: none;
-  padding: 10px 25px;
-  background: rgb(255, 181, 30);
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-
-  &:hover {
-    background: rgb(206, 191, 191);
-  }
-}
-
 /* output-container */
-#output-container {
-  color: #999;
+.oContainer {
+  color: #999; // font containerColor
   height: auto;
 
   border: 0;
   border-radius: 20px;
-  background-color: rgb(255, 227, 171);
+  background-color: rgb(255, 227, 171); //  containerColor
   width: 100%;
-}
 
-#output-container textarea {
-  background-color: transparent;
-  border: 0;
-  width: 100%;
-  height: 80px;
+  &__content {
+    background-color: transparent;
+    border: 0;
+    width: 100%;
+    height: 80px;
 
-  color: rgb(0, 0, 0);
-  resize: none;
-  outline: none;
-  text-align: center;
-  padding: 10px;
+    color: rgb(0, 0, 0); // fontColor
+    resize: none;
+    outline: none;
+    text-align: center;
+    padding: 10px;
+  }
 }
 </style>
