@@ -1,9 +1,11 @@
 <template>
   <v-container id="dashboard" fluid tag="section">
-    <v-row id="checker">
+    <v-container id="inoutputer">
       <div id="main">
-        <div class="container1">
-          <h2>MailChecker</h2>
+        <h2 class="myTitle">{{ titleInput }}</h2>
+
+        <div class="input-container">
+          <h2>{{ titleInnerInput }}</h2>
 
           <form>
             <div class="input-field">
@@ -28,14 +30,14 @@
           </form>
         </div>
 
-        <div id="output">
-          <h3>Predict</h3>
+        <h3 class="myTitle">{{ titleOutput }}</h3>
+        <div id="output-container">
           <div>
             <textarea id="content" readonly v-model="serverResponse"></textarea>
           </div>
         </div>
       </div>
-    </v-row>
+    </v-container>
   </v-container>
 </template>
 
@@ -47,6 +49,10 @@ export default {
 
   data() {
     return {
+      titleInput: 'MailChecker',
+      titleInnerInput: 'MailChecker',
+      titleOutput: 'Predict',
+
       serverResponse: 'Click to get prediction',
       dropdown_selector: ['Model1', 'Model2'],
 
@@ -85,8 +91,8 @@ export default {
   }
 };
 </script>
-<style>
-#checker {
+<style lang="scss">
+#inoutputer {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -95,97 +101,101 @@ export default {
   justify-content: center;
   text-align: left;
   min-height: 100vh;
-  background: rgb(rgb(0, 0, 0));
 }
 
-#title {
+.myTitle {
   color: rgb(0, 0, 0);
   margin-bottom: 20px;
 }
 
-.container1 {
+/* input-container */
+.input-container {
   border-radius: 15px;
   position: relative;
   width: 700px;
   padding: 20px;
   background: rgb(255, 227, 171);
+  /* container inner title */
+  h2 {
+    color: #999;
+    font-weight: lighter;
+    margin-bottom: 40px;
+    font-size: 1.2rem;
+  }
+
+  margin-bottom: 20px;
 }
 
-.container1 h2 {
-  color: #999;
-  font-weight: lighter;
-  margin-bottom: 45px;
-}
-
+/* sub of input-container */
 .input-field {
   position: relative;
   height: 220px;
   width: 100%;
-}
 
-.input-field label {
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: #555;
-  pointer-events: none;
-  display: block;
-  transition: 0.5s;
-  letter-spacing: 1px;
-}
+  label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #555;
+    pointer-events: none;
+    display: block;
+    transition: 0.5s;
+    letter-spacing: 1px;
+  }
 
-.input-field textarea {
-  position: absolute;
-  background: transparent;
-  box-shadow: none;
-  border: none;
-  font-size: 16px;
-  color: rgb(0, 0, 0);
-  width: 100%;
-  height: 210px;
-  outline: none;
-  resize: none;
-  overflow: hidden;
-  line-height: 24px;
-}
+  textarea {
+    position: absolute;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    width: 100%;
+    height: 210px;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+    line-height: 24px;
 
-.input-field textarea:focus + label,
-.input-field textarea:valid + label {
-  transform: translateY(-35px);
-  font-size: 14px;
-  color: rgb(0, 0, 0);
-  background: #ff006a;
-  padding: 5px 2px;
-}
+    &:focus + label,
+    &:valid + label {
+      transform: translateY(-35px);
+      font-size: 14px;
+      color: rgb(0, 0, 0);
+      background: #ff006a;
+      padding: 5px 2px;
+    }
 
-.input-field span {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  display: block;
-  background: #555;
-  width: 100%;
-  height: 2px;
-}
+    &:focus ~ span:before,
+    &:valid ~ span:before {
+      transform: scaleX(1);
+      transform-origin: right;
+      transition: transform 0.5s ease-in-out;
+    }
+  }
 
-.input-field span:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgb(255, 181, 30);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.5s ease-in-out;
-}
+  span {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: block;
+    background: #555;
+    width: 100%;
+    height: 2px;
 
-.input-field textarea:focus ~ span:before,
-.input-field textarea:valid ~ span:before {
-  transform: scaleX(1);
-  transform-origin: right;
-  transition: transform 0.5s ease-in-out;
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgb(255, 181, 30);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.5s ease-in-out;
+    }
+  }
 }
 
 .btn {
@@ -198,26 +208,24 @@ export default {
   color: #fff;
   font-size: 16px;
   cursor: pointer;
+
+  &:hover {
+    background: rgb(206, 191, 191);
+  }
 }
 
-.btn:hover {
-  background: rgb(206, 191, 191);
-}
-
-#output {
-  margin-top: 20px;
+/* output-container */
+#output-container {
   color: #999;
   height: auto;
-}
 
-#output div {
   border: 0;
   border-radius: 20px;
   background-color: rgb(255, 227, 171);
   width: 100%;
 }
 
-#output textarea {
+#output-container textarea {
   background-color: transparent;
   border: 0;
   width: 100%;
@@ -228,67 +236,5 @@ export default {
   outline: none;
   text-align: center;
   padding: 10px;
-}
-
-/* Sidebar */
-#checker {
-  transition: background-color 0.5s;
-}
-
-/*侧边栏选择器*/
-.sidenav {
-  height: 100%;
-  width: 0; /*原始宽度*/
-  position: fixed;
-  /*z-index、top、left共同控制侧栏的悬浮（上方1，下方-1）*/
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #111;
-  overflow-x: hidden;
-  transition: 0.5s; /*侧栏延迟0.5s显示*/
-  padding-top: 60px;
-}
-
-/*侧边栏标签选择器*/
-.sidenav a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #818181;
-  display: block;
-  transition: 0.3s; /*标签延迟0.3s显示*/
-}
-
-.sidenav a.sid {
-  font-size: 15px;
-}
-
-.sidenav a:hover,
-.offcanvas a:focus {
-  color: #f1f1f1;
-}
-
-.sidenav .closebtn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
-}
-
-#main {
-  transition: margin-left 0.5s;
-  padding: 16px;
-}
-
-/*when page height < 450，adjust the padding as well as the font size of sidepar*/
-@media screen and (max-height: 450px) {
-  .sidenav {
-    padding-top: 15px;
-  }
-  .sidenav a {
-    font-size: 18px;
-  }
 }
 </style>
