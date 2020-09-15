@@ -69,7 +69,7 @@ def generator():
     data = json.loads(request.get_data(as_text=True))
     print(data)
     mailcontent = data['content']
-    mailtype = data['type']
+    mailtype = data['model']
     nextwords = 50
 
     if mailtype == 'ham':
