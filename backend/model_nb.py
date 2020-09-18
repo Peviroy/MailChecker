@@ -12,6 +12,7 @@ class MultiNB_Controller:
             predict = 'ham'
         else:
             predict = 'spam'
+            prob = 1 - prob
         prob = prob[0][0]
 
         return predict, prob
