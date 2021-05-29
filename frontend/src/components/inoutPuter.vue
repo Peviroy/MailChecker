@@ -6,27 +6,6 @@
       <div class="iContainer">
         <h2 class="iContainer__innerTitle">{{ titleInnerInput }}</h2>
 
-        <form>
-          <div class="iContainer__inputField">
-            <textarea required="required" name="query" autofocus v-model="mailcontent_input"></textarea>
-            <label>Type in mail text for identify</label>
-            <span></span>
-          </div>
-
-          <v-container id="iContainer__modelSelector">
-            <v-overflow-btn
-              class="my-2"
-              :items="dropdown_selector"
-              label="Choose a model"
-              target="#iContainer__modelSelector"
-              dense
-              loading
-              menu-props="top"
-              v-model="selected_model"
-            ></v-overflow-btn>
-          </v-container>
-          <input type="submit" value="Show Result" class="iContainer__btn" @click="getResult" />
-        </form>
       </div>
 
       <h3 class="myTitle">{{ titleOutput }}</h3>
@@ -51,7 +30,7 @@ export default {
     },
     titleInnerInput: {
       type: String,
-      default: 'TextSpotter'
+      default: 'Scene text sample'
     },
     titleInnerOutput: {
       type: String,
@@ -65,13 +44,6 @@ export default {
     serverResponse: {
       type: String,
       default: 'Click to get prediction'
-    },
-    dropdown_selector: {
-      type: Array,
-      default: () => ['Model1', 'Model2'],
-      validator: function(array) {
-        return array.length == 2;
-      }
     },
     theme: {
       type: String,
@@ -124,12 +96,12 @@ export default {
   position: relative;
   width: 700px;
   padding: 20px;
-  background: rgb(255, 227, 171); // containerColor
+  background: rgb(247, 228, 190); // containerColor
   margin-bottom: 20px;
 
   /* container inner title */
   &__innerTitle {
-    color: #999; //innerTitleColor
+    color: #333333; //innerTitleColor
     font-weight: lighter;
     margin-bottom: 40px;
     font-size: 1.2rem;
@@ -141,88 +113,13 @@ export default {
     border-radius: 10px;
     box-shadow: none;
     padding: 10px 25px;
-    background: rgb(255, 181, 30); // buttonBackground
+    background: rgb(255, 210, 120); // buttonBackground
     color: #fff; // buttonFont
     font-size: 16px;
     cursor: pointer;
 
     &:hover {
       background: rgb(206, 191, 191); // buttonHover
-    }
-  }
-}
-
-/* sub of input-container */
-.iContainer__inputField {
-  position: relative;
-  height: 220px;
-  width: 100%;
-
-  /* label for input area */
-  label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    color: #555; // labelColor_before
-    pointer-events: none;
-    display: block;
-    transition: 0.5s;
-    letter-spacing: 1px;
-  }
-
-  /* input area */
-  textarea {
-    position: absolute;
-    background: transparent;
-    box-shadow: none;
-    border: none;
-    font-size: 16px;
-    color: rgb(0, 0, 0); // fontColor
-    width: 100%;
-    height: 210px;
-    outline: none;
-    resize: none;
-    overflow: hidden;
-    line-height: 24px;
-
-    &:focus + label,
-    &:valid + label {
-      transform: translateY(-35px);
-      font-size: 14px;
-      color: rgb(0, 0, 0); // labelColorAfter
-      background: #ff006a; // labelBackground
-      padding: 5px 2px;
-    }
-
-    &:focus ~ span:before,
-    &:valid ~ span:before {
-      transform: scaleX(1);
-      transform-origin: right;
-      transition: transform 0.5s ease-in-out;
-    }
-  }
-
-  /* marker bar of inputFiled */
-  span {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    display: block;
-    background: #555; // lineColor_before
-    width: 100%;
-    height: 2px;
-
-    &:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgb(255, 181, 30); // lineColor_after
-      transform: scaleX(0);
-      transform-origin: right;
-      transition: transform 0.5s ease-in-out;
     }
   }
 }
@@ -234,7 +131,7 @@ export default {
 
   border: 0;
   border-radius: 20px;
-  background-color: rgb(255, 227, 171); //  containerColor
+  background-color: rgb(247, 228, 190); //  containerColor
   width: 100%;
 
   &__content {
