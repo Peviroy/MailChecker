@@ -11,8 +11,10 @@
     "now-start": "vue-cli-service serve"
   },
   "dependencies": {
+    "@mdi/font": "^5.9.55",
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
+    "deepmerge": "^4.2.2",
     "echarts": "^4.9.0",
     "ele-table": "^1.0.1",
     "jschardet": "^2.2.1",
