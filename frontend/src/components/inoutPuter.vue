@@ -6,6 +6,22 @@
       <div class="iContainer">
         <h2 class="iContainer__innerTitle">{{ titleInnerInput }}</h2>
 
+        <v-file-input
+          label="Picture here"
+          show-size
+          small-chips
+          multiple
+          truncate-length="15"
+          prepend-icon="mdi-camera"
+          accept="image/png, image/jpeg"
+          v-model="images"
+          @change="onAddFiles"
+        ></v-file-input>
+        <span v-for="url in img_urls" :key="`preview-${url}`">
+          <v-img :src="url" />
+        </span>
+
+        <input type="submit" value="Show Result" class="iContainer__btn" @click="onUpload" />
       </div>
 
       <h3 class="myTitle">{{ titleOutput }}</h3>
@@ -30,7 +46,7 @@ export default {
     },
     titleInnerInput: {
       type: String,
-      default: 'Scene text sample'
+      default: 'Upload scene text samples'
     },
     titleInnerOutput: {
       type: String,
@@ -53,11 +69,20 @@ export default {
 
   data() {
     return {
-      mailcontent_input: null,
-      selected_model: null
+      img_urls: [],
+      images: []
     };
   },
   methods: {
+    onAddFiles(images) {
+      this.img_urls = [];
+      images.forEach((image, index) => {
+        this.img_urls[index] = URL.createObjectURL(image);
+      });
+    },
+    onUpload() {
+      console.log(this.images);
+    },
     getResult(event) {
       event.preventDefault();
 
