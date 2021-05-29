@@ -47,11 +47,11 @@ export default {
   props: {
     titleInput: {
       type: String,
-      default: 'MailChecker'
+      default: 'TextSpotter'
     },
     titleInnerInput: {
       type: String,
-      default: 'MailChecker'
+      default: 'TextSpotter'
     },
     titleInnerOutput: {
       type: String,

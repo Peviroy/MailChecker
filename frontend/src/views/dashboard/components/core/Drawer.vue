@@ -8,7 +8,7 @@
     :src="barImage"
     mobile-break-point="960"
     app
-    width="260"
+    width="330"
     v-bind="$attrs"
   >
     <template v-slot:img="props">
@@ -22,7 +22,7 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title class="display-1" v-text="text" />
+          <v-list-item-title class="display-1" v-text="title" />
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -52,23 +52,19 @@ export default {
   },
 
   data: () => ({
-    text: 'MailChecker',
+    title: 'TextSpotter',
     logo_pic: require('@/assets/favicon.png'),
     items: [
       {
         icon: 'mdi-view-dashboard',
         title: 'dashboard',
+        subtitle: '----The palce to text spotting',
         to: '/'
       },
       {
         title: 'Data table',
         icon: 'mdi-clipboard-outline',
         to: '/dataset/RegularTables'
-      },
-      {
-        title: 'Generator lab',
-        icon: 'mdi-chart-bubble',
-        to: '/generator'
       },
       {
         title: 'Word analysis',
@@ -78,6 +74,7 @@ export default {
       {
         title: 'Lucky dog',
         icon: 'mdi-chart-bubble',
+        subtitle: '----Annotation for fun',
         to: '/NotFound'
       }
     ]

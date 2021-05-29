@@ -16,11 +16,6 @@ export default new Router({
           path: '',
           component: () => import('@/views/dashboard/Predictor')
         },
-        {
-          name: 'Generator lab',
-          path: 'generator',
-          component: () => import('@/views/dashboard/Generator')
-        },
         // Tables
         {
           name: 'Data table',

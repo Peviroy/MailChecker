@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar id="app-bar" absolute app color="transparent" flat height="75">
+  <v-app-bar id="app-bar" absolute app color="#A0DBA2" flat height="75">
     <v-btn class="mr-3" elevation="1" fab small @click="setDrawer(!drawer)">
       <v-icon v-if="value">
         mdi-view-quilt
@@ -7,14 +7,14 @@
 
       <v-icon v-else>
         mdi-dots-vertical
-      </v-icon>  
+      </v-icon>
     </v-btn>
 
     <v-toolbar-title class="hidden-sm-and-down font-weight-light" v-text="$route.name" />
 
-    <v-spacer/>
+    <v-spacer />
     <div id="title" align="center">
-      <h1 align="center">MailChecker</h1>
+      <h1 align="center" v-text="title"></h1>
     </div>
   </v-app-bar>
 </template>
@@ -36,6 +36,7 @@ export default {
   },
 
   data: () => ({
+    title: 'TextSpotter',
     notifications: [
       'Mike John Responded to your email',
       'You have 5 new tasks',
