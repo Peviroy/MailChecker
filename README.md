@@ -78,18 +78,18 @@ yarn global add @vue/cli
 #### For solution development
 
 -   python3 env
-    -   scipy==1.4.1
-    -   joblib==0.16.0
-    -   Flask_Cors==3.0.9
-    -   matplotlib==3.2.1
-    -   pandas==1.0.3
-    -   nltk==3.5
-    -   torchvision==0.7.0
-    -   Flask==1.1.2
-    -   numpy==1.16.4
-    -   torch==1.6.0
-    -   ipython==7.18.1
-    -   scikit_learn==0.23.2
+    -   scipy>=1.4.1
+    -   joblib>=0.16.0
+    -   Flask_Cors>=3.0.9
+    -   matplotlib>=3.2.1
+    -   pandas>=1.0.3
+    -   nltk>=3.5
+    -   torchvision>=0.7.0
+    -   Flask>=1.1.2
+    -   numpy>=1.16.4
+    -   torch>=1.6.0
+    -   ipython>=7.18.1
+    -   scikit_learn>=0.23.2
 
 ### 3.Installation
 
@@ -117,12 +117,12 @@ yarn
 
 #### Web part:
 
-虽然预计采用的是静态网页，但在开发过程中利用 flask-cors 能做到前后端的实时交互。同时开启前后端服务即可。
+虽然采用的是静态网页，但在开发过程中利用 flask-cors 能做到前后端的实时交互。同时开启前后端服务即可。
 
 1. Flask：
 
 ```sh
-FLASK_APP=run.py flask run
+FLASK_APP=app.py flask run
 ```
 
 2. Vue end:
@@ -131,6 +131,8 @@ FLASK_APP=run.py flask run
 cd frontend
 yarn run serve
 ```
+
+此时浏览器进入`localhost:8080`便应当能够正常在生产环境下调试。
 
 3. Build test:
    使用`yarn run build`生成 dist 目录，此时单独启动 flask 便是最终的 web 效果
