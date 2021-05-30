@@ -118,22 +118,26 @@ def csvread():
 @app.route('/photos/upload', methods=['POST'])
 def getImages():
     # get images
-    images = request.files['images']
-    print('Get request: ', images)
+    images = request.files.getlist('images')
 
-    # process images
-    img = Image.open(images.stream)
+    encoded_picstring_list = []
+    image_name_list = []
+    for i, image in enumerate(images):
+        print(f'Proccessing {i+1}th images')
+        img = Image.open(image.stream)
+        image_name_list.append(image.filename)
 
-    img_byte_arr = io.BytesIO()
-    img.save(img_byte_arr, format='JPEG')
-    img_byte_arr = img_byte_arr.getvalue()
-    encoded_string = base64.b64encode(img_byte_arr).decode('utf-8')
+        img_byte_arr = io.BytesIO()
+        img.save(img_byte_arr, format='JPEG')
+        img_byte_arr = img_byte_arr.getvalue()
+        encoded_picstring_list.append(
+            base64.b64encode(img_byte_arr).decode('utf-8'))
 
     # img.save('./tmp.jpg')
     # with open('./tmp.jpg', 'rb') as image_file:
     #     print(img_byte_arr == image_file.read())
     #     encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
-    return {"image": encoded_string}
+    return {"images": encoded_picstring_list, "images_name": image_name_list}
 
 
 @app.errorhandler(404)

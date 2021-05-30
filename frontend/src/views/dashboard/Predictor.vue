@@ -2,8 +2,8 @@
   <v-container id="dashboard" fluid tag="section">
     <inoutputer
       v-on:get-result="getPredicted"
-      :serverResponse="serverResponse"
-      :serverPicture="serverPicture"
+      :serverResponses="serverResponses"
+      :serverPictures="serverPictures"
     ></inoutputer>
   </v-container>
 </template>
@@ -21,8 +21,9 @@ export default {
 
   data() {
     return {
-      serverResponse: 'Click to get prediction',
-      serverPicture: ''
+      serverResponses: ['Click to get prediction'],
+      serverPictures: [],
+      predictions: {}
     };
   },
 
@@ -39,13 +40,19 @@ export default {
         })
         .then((response) => {
           console.log(response);
-          var image = response.data.image;
-          console.log(image);
-          //var decoded_image = base64.b64decode(image);
-          //console.log(decoded_image);
-          var decoded_img_string = 'data:image/jpeg;base64,' + image;
-          this.serverResponse = '111';
-          this.serverPicture = decoded_img_string;
+          var images = response.data.images;
+          var images_name = response.data.images_name;
+          console.log(images_name);
+
+          var decoded_images = [];
+          console.log('Decoding imageing');
+          images.forEach((image, index) => {
+            let decoded_img_string = 'data:image/jpeg;base64,' + image;
+            decoded_images[index] = decoded_img_string;
+          });
+
+          this.serverResponses = images_name;
+          this.serverPictures = decoded_images;
         })
         .catch(function (error) {
           console.log(error);

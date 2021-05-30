@@ -27,8 +27,10 @@
       <div class="oContainer">
         <h2 class="oContainer__innerTitle">{{ titleInnerOutput }}</h2>
         <div>
-          <textarea class="oContainer__content" readonly v-model="serverResponseUnmute"></textarea>
-          <v-img :src="serverPicture"></v-img>
+          <!--TODO: Merge into a tableview <textarea class="oContainer__content" readonly v-model="myserverResponses[0]"></textarea> -->
+          <span v-for="url in myserverPictures" :key="`output-${url}`">
+            <v-img :src="url" />
+          </span>
         </div>
       </div>
     </div>
@@ -37,6 +39,7 @@
 
 <script>
 export default {
+  //Note: serverResponses not used for right now. Keep it for intergrating img display with img_name display
   name: 'inoutputer',
 
   props: {
@@ -56,13 +59,11 @@ export default {
       type: String,
       default: 'Predict'
     },
-    serverResponse: {
-      type: String,
-      default: 'Click to get prediction'
+    serverResponses: {
+      type: Array
     },
-    serverPicture: {
-      type: String,
-      default: ''
+    serverPictures: {
+      type: Array
     },
     theme: {
       type: String,
@@ -75,7 +76,8 @@ export default {
       img_urls: [],
       images: [],
       formData: new FormData(),
-      serverResponseUnmute: this.serverResponse
+      myserverResponses: ['Click to get prediction'],
+      myserverPictures: []
     };
   },
   methods: {
@@ -86,6 +88,8 @@ export default {
         this.img_urls[index] = URL.createObjectURL(image);
         this.formData.append('images', image, image.name);
       });
+      console.log('11');
+      console.log(this.img_urls);
     },
     onUpload() {
       console.log(this.images);
@@ -109,6 +113,18 @@ export default {
       // additional data
       console.log(this.formData.get('images'));
       this.$emit('get-result', this.formData);
+    }
+  },
+  mounted() {
+    this.myserverResponses = this.serverResponses;
+    this.myserverPictures = this.serverPictures;
+  },
+  watch: {
+    serverResponses() {
+      this.myserverResponses = this.serverResponses;
+    },
+    serverPictures() {
+      this.myserverPictures = this.serverPictures;
     }
   }
 };
