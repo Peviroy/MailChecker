@@ -1,6 +1,10 @@
 <template>
   <v-container id="dashboard" fluid tag="section">
-    <inoutputer v-on:get-result="getPredicted" :serverResponse="serverResponse"></inoutputer>
+    <inoutputer
+      v-on:get-result="getPredicted"
+      :serverResponse="serverResponse"
+      :serverPicture="serverPicture"
+    ></inoutputer>
   </v-container>
 </template>
 
@@ -17,30 +21,33 @@ export default {
 
   data() {
     return {
-      serverResponse: 'Click to get prediction'
+      serverResponse: 'Click to get prediction',
+      serverPicture: ''
     };
   },
 
   methods: {
-    getPredicted(postMsg) {
+    getPredicted(formData) {
       let baseURL = process.env.VUE_APP_BASEURL;
-      const path = baseURL + '/getPredict';
+      const path = baseURL + '/photos/upload';
 
       axios
-        .post(path, postMsg)
-        .then((response) => {
-          var prediction = response.data.msg;
-          var prob = response.data.prob;
-
-          var display;
-          if (postMsg.model === 'Model1') {
-            display = `${prediction.toUpperCase()}     Score  ${prob.toFixed(4) * 100}`;
-          } else {
-            display = `${prediction.toUpperCase()}`;
+        .post(path, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
           }
-          this.serverResponse = display;
         })
-        .catch(function(error) {
+        .then((response) => {
+          console.log(response);
+          var image = response.data.image;
+          console.log(image);
+          //var decoded_image = base64.b64decode(image);
+          //console.log(decoded_image);
+          var decoded_img_string = 'data:image/jpeg;base64,' + image;
+          this.serverResponse = '111';
+          this.serverPicture = decoded_img_string;
+        })
+        .catch(function (error) {
           console.log(error);
         });
     }

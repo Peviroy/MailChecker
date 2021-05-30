@@ -14,21 +14,21 @@
           truncate-length="15"
           prepend-icon="mdi-camera"
           accept="image/png, image/jpeg"
-          v-model="images"
           @change="onAddFiles"
         ></v-file-input>
         <span v-for="url in img_urls" :key="`preview-${url}`">
           <v-img :src="url" />
         </span>
 
-        <input type="submit" value="Show Result" class="iContainer__btn" @click="onUpload" />
+        <input type="submit" value="Show Result" class="iContainer__btn" @click="getResult" />
       </div>
 
       <h3 class="myTitle">{{ titleOutput }}</h3>
       <div class="oContainer">
         <h2 class="oContainer__innerTitle">{{ titleInnerOutput }}</h2>
         <div>
-          <textarea class="oContainer__content" readonly v-model="serverResponse"></textarea>
+          <textarea class="oContainer__content" readonly v-model="serverResponseUnmute"></textarea>
+          <v-img :src="serverPicture"></v-img>
         </div>
       </div>
     </div>
@@ -56,10 +56,13 @@ export default {
       type: String,
       default: 'Predict'
     },
-
     serverResponse: {
       type: String,
       default: 'Click to get prediction'
+    },
+    serverPicture: {
+      type: String,
+      default: ''
     },
     theme: {
       type: String,
@@ -70,14 +73,18 @@ export default {
   data() {
     return {
       img_urls: [],
-      images: []
+      images: [],
+      formData: new FormData(),
+      serverResponseUnmute: this.serverResponse
     };
   },
   methods: {
     onAddFiles(images) {
+      this.images = images;
       this.img_urls = [];
       images.forEach((image, index) => {
         this.img_urls[index] = URL.createObjectURL(image);
+        this.formData.append('images', image, image.name);
       });
     },
     onUpload() {
@@ -86,12 +93,22 @@ export default {
     getResult(event) {
       event.preventDefault();
 
-      let postMsg = {
-        content: this.mailcontent_input,
-        model: this.selected_model
-      };
+      // var formData = new FormData();
+      // if (this.images) {
+      //   // images
+      //   for (let image of this.images) {
+      //     formData.append('images', image);
+      //     console.log(image);
+      //     console.log(image.name);
+      //   }
+      //   console.log(formData);
+      // } else {
+      //   console.log('no images specified.');
+      // }
 
-      this.$emit('get-result', postMsg);
+      // additional data
+      console.log(this.formData.get('images'));
+      this.$emit('get-result', this.formData);
     }
   }
 };
@@ -100,7 +117,6 @@ export default {
 <style lang="scss" scoped>
 /* root */
 #inoutputer {
-  margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: sans-serif;
@@ -108,6 +124,10 @@ export default {
   justify-content: center;
   text-align: left;
   min-height: 100vh;
+}
+
+#main {
+  width: 1000px;
 }
 
 .myTitle {
@@ -119,7 +139,7 @@ export default {
 .iContainer {
   border-radius: 15px;
   position: relative;
-  width: 700px;
+  width: 100%;
   padding: 20px;
   background: rgb(247, 228, 190); // containerColor
   margin-bottom: 20px;
@@ -153,7 +173,7 @@ export default {
 .oContainer {
   color: #999; // font containerColor
   height: auto;
-
+  padding: 20px;
   border: 0;
   border-radius: 20px;
   background-color: rgb(247, 228, 190); //  containerColor
