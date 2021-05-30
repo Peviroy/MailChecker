@@ -62,14 +62,9 @@ export default {
         to: '/'
       },
       {
-        title: 'Word analysis',
-        icon: 'mdi-map-marker',
-        to: '/dataset/WordAnalysis'
-      },
-      {
         title: 'Lucky dog',
         icon: 'mdi-chart-bubble',
-        subtitle: '----Annotation for fun',
+        subtitle: '----Annimation for fun',
         to: '/NotFound'
       }
     ]

@@ -15,12 +15,6 @@ export default new Router({
           name: 'Predictor',
           path: '',
           component: () => import('@/views/dashboard/Predictor')
-        },
-        // Maps
-        {
-          name: 'Word analysis',
-          path: 'dataset/WordAnalysis',
-          component: () => import('@/views/dashboard/dataset/WordAnalysis')
         }
       ]
     },
