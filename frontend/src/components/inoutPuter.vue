@@ -16,11 +16,15 @@
           accept="image/png, image/jpeg"
           @change="onAddFiles"
         ></v-file-input>
-        <span v-for="url in img_urls" :key="`preview-${url}`">
-          <v-img :src="url" />
-        </span>
-
-        <input type="submit" value="Show Result" class="iContainer__btn" @click="getResult" />
+        <div v-if="isPreview">
+          <span v-for="url in img_urls" :key="`preview-${url}`">
+            <v-img :src="url" />
+          </span>
+        </div>
+        <div id="btnDiv">
+          <input type="submit" value="Show Result" class="iContainer__btn" @click="getResult" />
+          <input type="submit" value="Toggle Preview" class="iContainer__btn" @click="togglePreview" />
+        </div>
       </div>
 
       <h3 class="myTitle">{{ titleOutput }}</h3>
@@ -77,7 +81,8 @@ export default {
       images: [],
       formData: new FormData(),
       myserverResponses: ['Click to get prediction'],
-      myserverPictures: []
+      myserverPictures: [],
+      isPreview: false
     };
   },
   methods: {
@@ -96,23 +101,12 @@ export default {
     },
     getResult(event) {
       event.preventDefault();
-
-      // var formData = new FormData();
-      // if (this.images) {
-      //   // images
-      //   for (let image of this.images) {
-      //     formData.append('images', image);
-      //     console.log(image);
-      //     console.log(image.name);
-      //   }
-      //   console.log(formData);
-      // } else {
-      //   console.log('no images specified.');
-      // }
-
-      // additional data
       console.log(this.formData.get('images'));
       this.$emit('get-result', this.formData);
+    },
+    togglePreview(event) {
+      event.preventDefault();
+      this.isPreview = !this.isPreview;
     }
   },
   mounted() {
@@ -169,11 +163,12 @@ export default {
   }
 
   &__btn {
-    margin-top: 20px;
+    margin-top: 15px;
     border: none;
-    border-radius: 10px;
+    border-radius: 15px;
     box-shadow: none;
-    padding: 10px 25px;
+    padding: 10px 15px;
+    width: 140px;
     background: rgb(255, 210, 120); // buttonBackground
     color: #fff; // buttonFont
     font-size: 16px;
@@ -184,7 +179,10 @@ export default {
     }
   }
 }
-
+#btnDiv {
+  display: flex;
+  justify-content: space-between;
+}
 /* output-container */
 .oContainer {
   color: #999; // font containerColor
