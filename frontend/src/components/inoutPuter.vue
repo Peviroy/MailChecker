@@ -30,10 +30,11 @@
       <h3 class="myTitle">{{ titleOutput }}</h3>
       <div class="oContainer">
         <h2 class="oContainer__innerTitle">{{ titleInnerOutput }}</h2>
-        <div>
-          <!--TODO: Merge into a tableview <textarea class="oContainer__content" readonly v-model="myserverResponses[0]"></textarea> -->
+        <!--TODO: Merge into a tableview <textarea class="oContainer__content" readonly v-model="myserverResponses[0]"></textarea> -->
+        <div class="d-flex flex-column justify-space-between align-center">
+          <v-slider v-model="image_width" class="align-self-stretch" min="600" max="1000" step="10"></v-slider>
           <span v-for="url in myserverPictures" :key="`output-${url}`">
-            <v-img :src="url" />
+            <v-img :src="url" :width="image_width" />
           </span>
         </div>
       </div>
@@ -61,7 +62,7 @@ export default {
     },
     titleOutput: {
       type: String,
-      default: 'Predict'
+      default: 'Predictions'
     },
     serverResponses: {
       type: Array
@@ -82,7 +83,8 @@ export default {
       formData: new FormData(),
       myserverResponses: ['Click to get prediction'],
       myserverPictures: [],
-      isPreview: false
+      isPreview: false,
+      image_width: 1000
     };
   },
   methods: {
