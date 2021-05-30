@@ -6,6 +6,7 @@ from flask_cors import CORS
 import json
 from PIL import Image
 import base64
+import io
 
 app = Flask(
     __name__,
@@ -122,10 +123,16 @@ def getImages():
 
     # process images
     img = Image.open(images.stream)
-    print(img)
-    img.save("./tsssss.jpg")
-    with open('./tsssss.jpg', 'rb') as image_file:
-        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+
+    img_byte_arr = io.BytesIO()
+    img.save(img_byte_arr, format='JPEG')
+    img_byte_arr = img_byte_arr.getvalue()
+    encoded_string = base64.b64encode(img_byte_arr).decode('utf-8')
+
+    # img.save('./tmp.jpg')
+    # with open('./tmp.jpg', 'rb') as image_file:
+    #     print(img_byte_arr == image_file.read())
+    #     encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
     return {"image": encoded_string}
 
 
