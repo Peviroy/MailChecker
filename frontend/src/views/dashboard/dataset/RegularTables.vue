@@ -61,7 +61,7 @@ export default {
         this.message1 = list.message1;
         this.message0 = list.message0;
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }
