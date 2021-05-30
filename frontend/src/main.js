@@ -16,25 +16,12 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import './plugins/base';
-import './plugins/chartist';
 import './plugins/vee-validate';
 import vuetify from './plugins/vuetify';
 import i18n from './i18n';
 import '@mdi/font/css/materialdesignicons.css';
 
 import axios from 'axios';
-
-import { VTable, VPagination } from 'vue-easytable';
-import VCharts from 'v-charts';
-Vue.use(VCharts);
-
-// 引入样式
-import 'vue-easytable/libs/themes-base/index.css';
-// 导入 table 和 分页组件
-
-// 注册到全局
-Vue.component(VTable.name, VTable);
-Vue.component(VPagination.name, VPagination);
 
 Vue.prototype.$axios = axios;
 

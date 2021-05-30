@@ -62,11 +62,6 @@ export default {
         to: '/'
       },
       {
-        title: 'Data table',
-        icon: 'mdi-clipboard-outline',
-        to: '/dataset/RegularTables'
-      },
-      {
         title: 'Word analysis',
         icon: 'mdi-map-marker',
         to: '/dataset/WordAnalysis'

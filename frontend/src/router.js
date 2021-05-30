@@ -16,12 +16,6 @@ export default new Router({
           path: '',
           component: () => import('@/views/dashboard/Predictor')
         },
-        // Tables
-        {
-          name: 'Data table',
-          path: 'dataset/RegularTables',
-          component: () => import('@/views/dashboard/dataset/RegularTables')
-        },
         // Maps
         {
           name: 'Word analysis',
