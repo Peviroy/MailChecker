@@ -21,7 +21,7 @@ export default {
 
   data() {
     return {
-      serverResponses: ['Click to get prediction'],
+      serverResponses: [],
       serverPictures: [],
       predictions: {}
     };
@@ -45,7 +45,7 @@ export default {
           console.log(images_name);
 
           var decoded_images = [];
-          console.log('Decoding imageing');
+          console.log('Decoding image');
           images.forEach((image, index) => {
             let decoded_img_string = 'data:image/jpeg;base64,' + image;
             decoded_images[index] = decoded_img_string;

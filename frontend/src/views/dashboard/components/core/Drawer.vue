@@ -57,8 +57,8 @@ export default {
     items: [
       {
         icon: 'mdi-view-dashboard',
-        title: 'dashboard',
-        subtitle: '----The palce to text spotting',
+        title: 'Predictor',
+        subtitle: '----The palce for text spotting',
         to: '/'
       },
       {
