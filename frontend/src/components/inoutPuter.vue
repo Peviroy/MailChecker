@@ -30,11 +30,11 @@
       <h3 class="myTitle">{{ titleOutput }}</h3>
       <div class="oContainer">
         <h2 class="oContainer__innerTitle">{{ titleInnerOutput }}</h2>
-        <!--TODO: Merge into a tableview <textarea class="oContainer__content" readonly v-model="myserverResponses[0]"></textarea> -->
         <div class="d-flex flex-column justify-space-between align-center">
           <v-slider v-model="image_width" class="align-self-stretch" min="600" max="1000" step="10"></v-slider>
-          <span v-for="url in myserverPictures" :key="`output-${url}`">
-            <v-img :src="url" :width="image_width" />
+          <span v-for="data in serverData" :key="`output-${data.url}`">
+            <h5 style="color: #000">{{ data.name }}</h5>
+            <expandable-image :src="data.url" :width="image_width" />
           </span>
         </div>
       </div>
@@ -43,9 +43,14 @@
 </template>
 
 <script>
+import ExpandableImage from '../views/dashboard/component/ExpandableImage';
 export default {
   //Note: serverResponses not used for right now. Keep it for intergrating img display with img_name display
   name: 'inoutputer',
+
+  components: {
+    ExpandableImage
+  },
 
   props: {
     titleInput: {
@@ -81,7 +86,7 @@ export default {
       img_urls: [],
       images: [],
       formData: new FormData(),
-      myserverResponses: ['Click to get prediction'],
+      myserverResponses: [],
       myserverPictures: [],
       isPreview: false,
       image_width: 1000
@@ -91,6 +96,7 @@ export default {
     onAddFiles(images) {
       this.images = images;
       this.img_urls = [];
+      this.formData = new FormData();
       images.forEach((image, index) => {
         this.img_urls[index] = URL.createObjectURL(image);
         this.formData.append('images', image, image.name);
@@ -122,6 +128,19 @@ export default {
     serverPictures() {
       this.myserverPictures = this.serverPictures;
     }
+  },
+
+  computed: {
+    serverData() {
+      const data = [];
+      for (let i = 0; i < this.myserverResponses.length; i++) {
+        data.push({
+          name: this.myserverResponses[i] || 'no name',
+          url: this.myserverPictures[i]
+        });
+      }
+      return data;
+    }
   }
 };
 </script>
@@ -139,7 +158,7 @@ export default {
 }
 
 #main {
-  width: 1000px;
+  width: 1050px;
 }
 
 .myTitle {
